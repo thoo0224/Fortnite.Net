@@ -29,7 +29,7 @@ namespace Fortnite.Net.Model.Fortnite
         public int MonthlyLimit { get; set; }
         public bool Refundable { get; set; }
         public string[] AppStoreId { get; set; }
-        public string Requirements { get; set; }
+        public CatalogEntryRequirement[] Requirements { get; set; }
         public CatalogEntryMeta[] MetaInfo { get; set; }
         public string CatalogGroup { get; set; }
         public int CatalogGroupPriority { get; set; }
@@ -38,7 +38,14 @@ namespace Fortnite.Net.Model.Fortnite
         public string ShortDescription { get; set; }
         public string Description { get; set; }
         public string DisplayAssetPath { get; set; }
-        public string[] ItemGrants { get; set; }
+        public FortItemStack[] ItemGrants { get; set; }
+    }
+
+    public class CatalogEntryRequirement
+    {
+        public string RequirementType { get; set; }
+        public string RequiredId { get; set; }
+        public int MinQuantity { get; set; }
     }
 
     public class CatalogEntryPrice

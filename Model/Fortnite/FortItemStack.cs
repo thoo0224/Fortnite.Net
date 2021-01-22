@@ -2,7 +2,7 @@
 {
     public class FortItemStack
     {
-        public int TemplateId { get; set; }
+        public string TemplateId { get; set; }
         public int Quantity { get; set; }
     }
 }

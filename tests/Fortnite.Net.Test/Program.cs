@@ -2,11 +2,13 @@
 
 namespace Fortnite.Net.Test
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+
+        public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }
+
     }
 }

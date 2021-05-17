@@ -69,6 +69,10 @@ namespace Fortnite.Net.Xmpp
             WebsocketClient.Options.KeepAliveInterval = TimeSpan.FromSeconds(60);
         }
 
+        /// <summary>
+        /// Starts the XMPP connection
+        /// </summary>
+        /// <returns></returns>
         public async Task StartAsync()
         {
             await WebsocketClient.ConnectAsync(new Uri("wss://xmpp-service-prod.ol.epicgames.com//"),
@@ -78,7 +82,11 @@ namespace Fortnite.Net.Xmpp
             await OpenAsync();
             await HandleMessagesAsync();
         }
-
+        
+        /// <summary>
+        /// Sends the message when connecting to Epics XMPP services.
+        /// </summary>
+        /// <returns></returns>
         public async Task OpenAsync()
         {
             var builder = new StringBuilder();
@@ -95,6 +103,10 @@ namespace Fortnite.Net.Xmpp
             await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends the authentication
+        /// </summary>
+        /// <returns></returns>
         public async Task SendAuthentication()
         {
             var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"\u0000{Client.CurrentLogin.AccountId}\u0000{Client.CurrentLogin.AccessToken}"));
@@ -113,6 +125,10 @@ namespace Fortnite.Net.Xmpp
             await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the incoming messages
+        /// </summary>
+        /// <returns></returns>
         public async Task HandleMessagesAsync()
         {
             while (WebsocketClient.State == WebSocketState.Open)
@@ -188,6 +204,11 @@ namespace Fortnite.Net.Xmpp
             Debugger.Break();
         }
 
+        /// <summary>
+        /// Handles a message
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
         public async Task HandleMessageAsync(XmlDocument document)
         {
             var element = document?.DocumentElement;
@@ -207,6 +228,11 @@ namespace Fortnite.Net.Xmpp
             await NotificationHandler.HandleNotificationAsync(document);
         }
         
+        /// <summary>
+        /// Handles a party message
+        /// </summary>
+        /// <param name="document">XML Document of the message</param>
+        /// <returns></returns>
         public async Task HandlePartyMessageAsync(XmlDocument document)
         {
             var element = document?.DocumentElement;
@@ -240,6 +266,11 @@ namespace Fortnite.Net.Xmpp
             });
         }
 
+        /// <summary>
+        /// Handles a chat message
+        /// </summary>
+        /// <param name="document">XML Document of the message</param>
+        /// <returns></returns>
         public async Task HandleChatMessageAsync(XmlDocument document)
         {
             var element = document?.DocumentElement;
@@ -259,6 +290,11 @@ namespace Fortnite.Net.Xmpp
             });
         }
 
+        /// <summary>
+        /// Sends the presence
+        /// </summary>
+        /// <param name="presence">Presence</param>
+        /// <returns></returns>
         public async Task SendPresenceAsync(Presence presence)
         {
             Presence = presence;
@@ -283,6 +319,11 @@ namespace Fortnite.Net.Xmpp
             await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends the IQ
+        /// </summary>
+        /// <param name="id">Id</param>
+        /// <returns></returns>
         public async Task SendIqAsync(string id)
         {
             var builder = new StringBuilder();
@@ -330,6 +371,10 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Joins the party chat of <see cref="CurrentParty"/>
+        /// </summary>
+        /// <returns></returns>
         public async Task JoinPartyChatAsync()
         {
             var builder = new StringBuilder();
@@ -352,6 +397,11 @@ namespace Fortnite.Net.Xmpp
             await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends a message
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task SendMessageAsync(string message)
         {
             var data = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
@@ -359,6 +409,10 @@ namespace Fortnite.Net.Xmpp
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
             await WebsocketClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "unavailable", CancellationToken.None);
@@ -366,6 +420,10 @@ namespace Fortnite.Net.Xmpp
             await OnDisconnectAsync();
         }
 
+        /// <summary>
+        /// Fires when the XMPP is connected
+        /// </summary>
+        /// <returns></returns>
         public async Task OnConnectAsync()
         {
             if (Connected != null)
@@ -374,6 +432,10 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fired when th XMPP connection is disconnected
+        /// </summary>
+        /// <returns></returns>
         public async Task OnDisconnectAsync()
         {
             if (Disconnected != null)
@@ -382,6 +444,11 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fired when a notification was received
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task OnNotificationAsync(NotificationReceivedEventArgs e)
         {
             if (NotificationReceived != null)
@@ -390,6 +457,11 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fired when a ping was received
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task OnPingAsync(PingEvent e)
         {
             if(Ping != null)
@@ -398,6 +470,11 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fired when a party invitation is received
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task OnPartyInvitationAsync(PartyInvitation e)
         {
             if(PartyInvitation != null)
@@ -406,6 +483,11 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fired when a party chat message is received
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task OnPartyMessageReceivedAsync(GroupChatMessageReceivedEventArgs e)
         {
             if (PartyChatMessageReceived != null)
@@ -414,6 +496,11 @@ namespace Fortnite.Net.Xmpp
             }
         }
 
+        /// <summary>
+        /// Fire when a normal chat message was received
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task OnMessageReceivedAsync(ChatMessageReceivedEventArgs e)
         {
             if (ChatMessageReceived != null)

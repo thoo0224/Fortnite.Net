@@ -46,7 +46,7 @@ namespace Fortnite.Net.Xmpp
         public event Func<NotificationReceivedEventArgs, Task> NotificationReceived;
         public event Func<PingEvent, Task> Ping;
         public event Func<PartyInvitation, Task> PartyInvitation;
-        public event Func<GroupChatMessageReceivedEventArgs, Task> PartyChatMessageReceived;
+        public event Func<PartyChatMessageReceivedEventArgs, Task> PartyChatMessageReceived;
         public event Func<ChatMessageReceivedEventArgs, Task> ChatMessageReceived;
 
         internal XmppClient(FortniteApiClient client, Platform platform)
@@ -259,7 +259,7 @@ namespace Fortnite.Net.Xmpp
                 return;
             }
 
-            await OnPartyMessageReceivedAsync(new GroupChatMessageReceivedEventArgs
+            await OnPartyMessageReceivedAsync(new PartyChatMessageReceivedEventArgs
             {
                 Party = CurrentParty,
                 From = member
@@ -488,7 +488,7 @@ namespace Fortnite.Net.Xmpp
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public async Task OnPartyMessageReceivedAsync(GroupChatMessageReceivedEventArgs e)
+        public async Task OnPartyMessageReceivedAsync(PartyChatMessageReceivedEventArgs e)
         {
             if (PartyChatMessageReceived != null)
             {

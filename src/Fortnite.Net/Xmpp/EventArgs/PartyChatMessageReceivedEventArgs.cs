@@ -2,7 +2,7 @@
 
 namespace Fortnite.Net.Xmpp.EventArgs
 {
-    public class GroupChatMessageReceivedEventArgs : System.EventArgs
+    public class PartyChatMessageReceivedEventArgs : System.EventArgs
     {
 
         public Party Party { get; set; }

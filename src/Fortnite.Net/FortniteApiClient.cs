@@ -19,8 +19,7 @@ namespace Fortnite.Net
         internal AuthConfig AuthConfig { get; set; }
         internal ClientToken DefaultClientToken { get; set; }
 
-        public delegate void LoginEventHandler(AuthResponse authResponse);
-        public event LoginEventHandler Login;
+        public event Func<AuthResponse, Task> Login;
 
         public AuthResponse CurrentLogin { get; set; }
         public bool IsLoggedIn { get; set; }
@@ -156,7 +155,7 @@ namespace Fortnite.Net
             }
 
             var responseData = response.Data;
-            OnLogin(responseData);
+            await OnLoginAsync(responseData);
 
             return responseData;
         }
@@ -208,7 +207,7 @@ namespace Fortnite.Net
             }
 
             var responseData = response.Data;
-            OnLogin(responseData);
+            await OnLoginAsync(responseData);
 
             return responseData;
         }
@@ -230,12 +229,15 @@ namespace Fortnite.Net
             }
         }
 
-        internal void OnLogin(AuthResponse authResponse)
+        internal async Task OnLoginAsync(AuthResponse authResponse)
         {
-            Login?.Invoke(authResponse);
+            if (Login != null)
+            {
+                await Login?.Invoke(authResponse);
 
-            CurrentLogin = authResponse;
-            IsLoggedIn = true;
+                CurrentLogin = authResponse;
+                IsLoggedIn = true;
+            }
         }
 
     }

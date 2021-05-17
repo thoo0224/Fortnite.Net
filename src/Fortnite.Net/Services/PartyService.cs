@@ -36,6 +36,12 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <summary>
+        /// Delete all the pings of the pinger
+        /// </summary>
+        /// <param name="pingerId">Id of the pinger</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
         public async Task<FortniteResponse> DeletePingAsync(
             string pingerId,
             CancellationToken cancellationToken = default)
@@ -47,6 +53,12 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <summary>
+        /// Joins the party and the party chat
+        /// </summary>
+        /// <param name="partyId">Id of the party</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
         public async Task<FortniteResponse> JoinPartyAsync(
             string partyId,
             CancellationToken cancellationToken = default)
@@ -67,6 +79,12 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <summary>
+        /// Gets the party
+        /// </summary>
+        /// <param name="partyId">Id of the party</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The party</returns>
         public async Task<FortniteResponse<Party>> GetPartyAsync(
             string partyId,
             CancellationToken cancellationToken = default)

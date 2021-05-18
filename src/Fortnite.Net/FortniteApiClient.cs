@@ -234,10 +234,10 @@ namespace Fortnite.Net
             if (Login != null)
             {
                 await Login?.Invoke(authResponse);
-
-                CurrentLogin = authResponse;
-                IsLoggedIn = true;
             }
+
+            CurrentLogin = authResponse;
+            IsLoggedIn = true;
         }
 
     }

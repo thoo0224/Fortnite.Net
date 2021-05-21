@@ -82,7 +82,7 @@ namespace Fortnite.Net.Services
             CancellationToken cancellationToken = default)
         {
             var request = new RestRequest("/account/api/oauth/token", Method.POST);
-            request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
+            request.AddHeader("Authorization", $"basic {(clientToken ?? Client.DefaultClientToken).Base64}");
             request.AddParameter("grant_type", "exchange_code");
             request.AddParameter("exchange_code", exchangeCode);
 

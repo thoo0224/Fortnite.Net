@@ -245,13 +245,38 @@ namespace Fortnite.Net.Services
             return response;
         }
 
-        public async Task<FortniteResponse<GameProfile>> FindAccountByDisplayName(
+        /// <summary>
+        /// Finds a profile by display name
+        /// </summary>
+        /// <param name="displayName">The display name of the profile</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The Fortnite response</returns>
+        public async Task<FortniteResponse<GameProfile>> FindAccountByDisplayNameAsync(
             string displayName,
             CancellationToken cancellationToken = default)
         {
             Preconditions.NotNullOrEmpty(displayName, nameof(displayName));
 
             var request = new RestRequest($"/account/api/public/account/displayName/{displayName}");
+            var response = await ExecuteAsync<GameProfile>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Finds a profile by email
+        /// </summary>
+        /// <param name="email">The email of the profile</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The Fortnite response</returns>
+        public async Task<FortniteResponse<GameProfile>> FindAccountByEmailAsync(
+            string email,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNullOrEmpty(email, nameof(email));
+
+            var request = new RestRequest($"/account/api/public/account/email/{email}");
             var response = await ExecuteAsync<GameProfile>(request, true, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -272,7 +297,6 @@ namespace Fortnite.Net.Services
          * GetExternalAuth
          * CreateExternalAuth
          * RemoveExternalAuth
-         * FindAccountByEmail
          * FindAccountById
          * QuerySsoDomains
          */

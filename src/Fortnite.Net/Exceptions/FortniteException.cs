@@ -1,6 +1,4 @@
-﻿using Fortnite.Net.Objects.Epic;
-
-using System;
+﻿using System;
 
 namespace Fortnite.Net.Exceptions
 {

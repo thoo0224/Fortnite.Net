@@ -1,12 +1,11 @@
 ﻿using Fortnite.Net.Objects;
-using Fortnite.Net.Objects.Epic;
-
 using Newtonsoft.Json;
 
 using RestSharp;
 
 using System.Threading;
 using System.Threading.Tasks;
+using Fortnite.Net.Exceptions;
 
 namespace Fortnite.Net.Services
 {

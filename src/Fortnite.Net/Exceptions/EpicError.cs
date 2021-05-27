@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace Fortnite.Net.Objects.Epic
+namespace Fortnite.Net.Exceptions
 {
-    [DebuggerDisplay("{" + nameof(ErrorMessage) + "}: {" + nameof(ErrorDescription) + "}")]
+    [DebuggerDisplay("{" + nameof(ErrorMessage) + "}")]
     public class EpicError
     {
 

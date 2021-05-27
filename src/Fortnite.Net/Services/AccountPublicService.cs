@@ -5,6 +5,7 @@ using Fortnite.Net.Objects.Auth;
 using RestSharp;
 
 using System.Threading.Tasks;
+using Fortnite.Net.Enums;
 
 namespace Fortnite.Net.Services
 {
@@ -163,6 +164,61 @@ namespace Fortnite.Net.Services
                 .ConfigureAwait(false);
             return response;
         }
+
+        /// <summary>
+        /// Kills sessions
+        /// </summary>
+        /// <param name="killType">The kill type</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
+        public async Task KillSessionsAsync(
+            SessionKillType killType,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new RestRequest($"/account/api/oauth/sessions/kill?killType={killType}", Method.DELETE);
+            await ExecuteAsync(request, true, cancellationToken);
+        }
+
+        /// <summary>
+        /// Kills a session
+        /// </summary>
+        /// <param name="accessToken">The AccessToken from the session to kill</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
+        public async Task KillSessionAsync(
+            string accessToken,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new RestRequest($"/account/api/oauth/sessions/kill/{accessToken}");
+            await ExecuteAsync(request, true, cancellationToken);
+        }
+
+        public async Task KillCurrentSessionAsync(CancellationToken cancellationToken = default)
+        {
+            await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /*
+         * TODO:
+         *
+         * KillSession
+         * FindAccounts
+         * FindAccount
+         * EditAccount
+         * GetAccountMetaData
+         * GetDeviceAuths
+         * GetDeviceAuth
+         * DeleteDeviceAuth
+         * GetExternalAuths
+         * GetExternalAuth
+         * CreateExternalAuth
+         * RemoveExternalAuth
+         * FindAccountByDisplayName
+         * FindAccountByEmail
+         * FindAccountById
+         * QuerySsoDomains
+         */
 
     }
 }

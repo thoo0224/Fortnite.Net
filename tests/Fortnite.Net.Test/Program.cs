@@ -22,6 +22,8 @@ namespace Fortnite.Net.Test
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret);
 
+            
+
             await Task.Delay(-1);
         }
 

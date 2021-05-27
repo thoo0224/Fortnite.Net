@@ -6,7 +6,14 @@ namespace Fortnite.Net.Attributes
     public class XmppNotificationAttribute : Attribute
     {
 
+        /// <summary>
+        /// Type of the notification
+        /// </summary>
         public string Type { get; set; }
+        
+        /// <summary>
+        /// Type of the data
+        /// </summary>
         public Type BodyType { get; set; }
 
         public XmppNotificationAttribute(string type, Type bodyType)

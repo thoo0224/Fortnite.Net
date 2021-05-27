@@ -21,14 +21,11 @@ namespace Fortnite.Net.Test
             var client = new FortniteApiClientBuilder()
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret);
-            
-            RegisterEvents(client);
-            await client.XmppClient.StartAsync();
 
             await Task.Delay(-1);
         }
 
-        private static void RegisterEvents(FortniteApiClient client)
+        /*private static void RegisterEvents(FortniteApiClient client)
         {
             client.XmppClient.Disconnected += () =>
             {
@@ -74,7 +71,7 @@ namespace Fortnite.Net.Test
                 Log.Information("Received chat message. {From}: {Message}", e.From, e.Message);
                 return Task.CompletedTask;
             };
-        }
+        }*/
 
         private static ILogger CreateLogger()
         {

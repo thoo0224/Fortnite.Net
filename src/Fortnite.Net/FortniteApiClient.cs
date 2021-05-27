@@ -26,7 +26,7 @@ namespace Fortnite.Net
 
 
         private readonly Lazy<XmppClient> _xmppClient;
-        public XmppClient XmppClient
+        protected XmppClient XmppClient
         {
             get
             {

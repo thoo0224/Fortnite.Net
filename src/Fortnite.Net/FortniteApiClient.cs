@@ -263,6 +263,12 @@ namespace Fortnite.Net
         }
 
         private bool _disposed;
+
+        /// <summary>
+        /// Kills the current session, if there are too many active sessions
+        /// you may not be able to use epic's services for a few hours.
+        /// </summary>
+        /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
             if (_disposed)

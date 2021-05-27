@@ -1,4 +1,6 @@
-﻿using Fortnite.Net.Enums;
+﻿using System;
+using System.ComponentModel;
+using Fortnite.Net.Enums;
 using Fortnite.Net.Objects;
 using Fortnite.Net.Objects.Auth;
 
@@ -184,7 +186,7 @@ namespace Fortnite.Net.Services
         /// </summary>
         /// <param name="killType">The kill type</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse> KillSessionsAsync(
             SessionKillType killType,
             CancellationToken cancellationToken = default)
@@ -207,7 +209,7 @@ namespace Fortnite.Net.Services
         /// </summary>
         /// <param name="accessToken">The AccessToken from the session to kill</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse> KillSessionAsync(
             string accessToken,
             CancellationToken cancellationToken = default)
@@ -221,8 +223,18 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <summary>
+        /// Kills the current session
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse> KillCurrentSessionAsync(CancellationToken cancellationToken = default)
         {
+            if (Client.IsLoggedIn || Client.CurrentLogin == null)
+            {
+                throw new InvalidOperationException("Tried killing the current session but the client was not logged in.");
+            }
+
             var response = await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)
                 .ConfigureAwait(false);
 

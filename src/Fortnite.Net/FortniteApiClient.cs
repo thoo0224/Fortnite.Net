@@ -13,7 +13,13 @@ using System.Threading.Tasks;
 
 namespace Fortnite.Net
 {
-    public class FortniteApiClient
+    /// <summary>
+    /// The Fortnite Api Client
+    /// It's recommended to dispose the client when you are done since it kills the current session.
+    /// If this is not disposed, you may have too many access tokens active and you will need to wait a few hours
+    /// to use the api again.
+    /// </summary>
+    public class FortniteApiClient : IAsyncDisposable
     {
 
         internal AuthConfig AuthConfig { get; set; }
@@ -238,6 +244,18 @@ namespace Fortnite.Net
 
             CurrentLogin = authResponse;
             IsLoggedIn = true;
+        }
+
+        private bool _disposed;
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            await AccountPublicService.KillCurrentSessionAsync();
+            _disposed = true;
         }
 
     }

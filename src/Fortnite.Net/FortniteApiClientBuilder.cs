@@ -9,7 +9,7 @@ using System;
 namespace Fortnite.Net
 {
     /// <summary>
-    /// Used to create the fortnite api client, obviously.
+    /// Used to create the fortnite api client.
     /// </summary>
     public class FortniteApiClientBuilder
     {

@@ -8,6 +8,7 @@ using RestSharp;
 
 using System.Threading;
 using System.Threading.Tasks;
+using Fortnite.Net.Objects.Account;
 using Fortnite.Net.Utils;
 
 namespace Fortnite.Net.Services
@@ -244,6 +245,19 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        public async Task<FortniteResponse<GameProfile>> FindAccountByDisplayName(
+            string displayName,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNullOrEmpty(displayName, nameof(displayName));
+
+            var request = new RestRequest($"/account/api/public/account/displayName/{displayName}");
+            var response = await ExecuteAsync<GameProfile>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
         /*
          * TODO:
          *
@@ -258,7 +272,6 @@ namespace Fortnite.Net.Services
          * GetExternalAuth
          * CreateExternalAuth
          * RemoveExternalAuth
-         * FindAccountByDisplayName
          * FindAccountByEmail
          * FindAccountById
          * QuerySsoDomains

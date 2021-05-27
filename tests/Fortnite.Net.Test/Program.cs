@@ -23,8 +23,11 @@ namespace Fortnite.Net.Test
             await using var client = new FortniteApiClientBuilder()
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret);
-            await client.AccountPublicService.KillSessionsAsync(SessionKillType.ALL);
-            var response = await client.AccountPublicService.KillCurrentSessionAsync();
+            var response = await client.AccountPublicService.FindAccountByDisplayName("Ninja");
+            if (!response.IsSuccessful)
+            {
+                Log.Error("Error: {Message} ({Code})", response.Error.ErrorMessage, response.HttpStatusCode);
+            }
 
             Debugger.Break();
         }

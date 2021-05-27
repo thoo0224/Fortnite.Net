@@ -9,11 +9,14 @@ namespace Fortnite.Net.Exceptions
 
         public EpicError EpicError { get; set; }
 
-        public FortniteException(string message, EpicError epicError)
-            : base($"{message} {(epicError != null ? $"({epicError.ErrorMessage})" : "")}") { }
+        public FortniteException(string message)
+            : base(message) { }
 
-        public FortniteException(string message, string epicMessage = null)
-            : base($"{message} {(epicMessage != null ? $"({epicMessage})" : "")}") { }
+        public FortniteException(string message, EpicError epicError)
+            : base($"{message} Epic Message: {epicError.ErrorMessage}")
+        {
+            EpicError = epicError;
+        }
 
     }
 }

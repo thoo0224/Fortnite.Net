@@ -193,6 +193,12 @@ namespace Fortnite.Net.Services
             var response = await ExecuteAsync(request, true, cancellationToken)
                 .ConfigureAwait(false);
 
+            if (killType == SessionKillType.ALL)
+            {
+                Client.IsLoggedIn = false;
+                Client.CurrentLogin = null;
+            }
+
             return response;
         }
 
@@ -219,6 +225,9 @@ namespace Fortnite.Net.Services
         {
             var response = await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)
                 .ConfigureAwait(false);
+
+            Client.IsLoggedIn = false;
+            Client.CurrentLogin = null;
 
             return response;
         }

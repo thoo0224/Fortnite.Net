@@ -3,6 +3,11 @@ using System.Text;
 
 namespace Fortnite.Net
 {
+    /// <summary>
+    /// Every application that utilises Epic's official services is issues an auth client
+    /// that is used to identify requests sent to epic, as well as to set boundaries to
+    /// what a certain application can access.
+    /// </summary>
     public class ClientToken
     {
 
@@ -17,10 +22,27 @@ namespace Fortnite.Net
         public static ClientToken ProdFn => CreateToken("xyza7891343Fr4ZSPkQZ3kaL3I2sX8B5", "F8BVRyHIqmct8cN9KSPbXsJszpiIZEYEFDiySxc1wuA");
         public static ClientToken LauncherAppClient2 => CreateToken("34a02cf8f4414e29b15921876da36f9a", "daafbccc737745039dffe53d94fc76cf");
 
+        /// <summary>
+        /// The id of the client.
+        /// </summary>
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Secret
+        /// </summary>
         public string Secret { get; set; }
+
+        /// <summary>
+        /// Base64 of the client token, encoded as <see cref="ClientId"/>:<see cref="Secret"/>
+        /// </summary>
         public string Base64 { get; set; }
 
+        /// <summary>
+        /// Creates a client token with a client id and secret, they are encoded in base64 as <see cref="ClientId"/>:<see cref="Secret"/>
+        /// </summary>
+        /// <param name="clientId">The id of the client</param>
+        /// <param name="secret">The secret</param>
+        /// <returns>Client token</returns>
         public static ClientToken CreateToken(string clientId, string secret)
         {
             return new ClientToken

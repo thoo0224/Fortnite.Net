@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace Fortnite.Net.Utils
 {
     internal static class Preconditions
     {
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NotNullOrEmpty(string str, string name)
         {
             if(string.IsNullOrEmpty(str))

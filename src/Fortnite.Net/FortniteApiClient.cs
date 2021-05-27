@@ -25,11 +25,20 @@ namespace Fortnite.Net
         internal AuthConfig AuthConfig { get; set; }
         internal ClientToken DefaultClientToken { get; set; }
 
+        /// <summary>
+        /// Fired on Authentication. (This will not fire on refresh)
+        /// </summary>
         public event Func<AuthResponse, Task> Login;
 
+        /// <summary>
+        /// The current authentication session
+        /// </summary>
         public AuthResponse CurrentLogin { get; set; }
-        public bool IsLoggedIn { get; set; }
 
+        /// <summary>
+        /// If the user is logged in
+        /// </summary>
+        public bool IsLoggedIn { get; set; }
 
         private readonly Lazy<XmppClient> _xmppClient;
         protected XmppClient XmppClient
@@ -42,6 +51,10 @@ namespace Fortnite.Net
         }
 
         private PartyService _partyService;
+
+        /// <summary>
+        /// Contains most/all of the party endpoints.
+        /// </summary>
         public PartyService PartyService
         {
             get
@@ -52,6 +65,9 @@ namespace Fortnite.Net
             set => _partyService = value;
         }
 
+        /// <summary>
+        /// Contains most/all of the account endpoints.
+        /// </summary>
         public AccountPublicService AccountPublicService { get; set; }
 
         private readonly Action<RestClient> _restClientAction;

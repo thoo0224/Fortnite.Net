@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using Fortnite.Net.Enums;
 using Fortnite.Net.Objects;
 using Fortnite.Net.Objects.Auth;
 
 using RestSharp;
 
+using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Enums;
+using Fortnite.Net.Utils;
 
 namespace Fortnite.Net.Services
 {
@@ -29,6 +30,8 @@ namespace Fortnite.Net.Services
             ClientToken clientToken = null,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(code, nameof(code));
+
             var request = new RestRequest("/account/api/oauth/token", Method.POST);
             request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
             request.AddParameter("grant_type", "authorization_code");
@@ -55,6 +58,8 @@ namespace Fortnite.Net.Services
             string accessToken,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(accessToken, nameof(accessToken));
+
             var request = new RestRequest("/account/api/oauth/exchange", Method.GET);
             request.AddHeader("Authorization", $"bearer {accessToken}");
 
@@ -82,6 +87,8 @@ namespace Fortnite.Net.Services
             ClientToken clientToken = null,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(exchangeCode, nameof(exchangeCode));
+
             var request = new RestRequest("/account/api/oauth/token", Method.POST);
             request.AddHeader("Authorization", $"basic {(clientToken ?? Client.DefaultClientToken).Base64}");
             request.AddParameter("grant_type", "exchange_code");
@@ -115,6 +122,9 @@ namespace Fortnite.Net.Services
             string accountId,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(accessToken, nameof(accessToken));
+            Preconditions.NotNullOrEmpty(accountId, nameof(accountId));
+
             var request = new RestRequest($"/account/api/public/account/{accountId}/deviceAuth", Method.POST);
             request.AddHeader("Authorization", $"bearer {accessToken}");
 
@@ -153,6 +163,10 @@ namespace Fortnite.Net.Services
             ClientToken clientToken = null,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(accountId, nameof(accountId));
+            Preconditions.NotNullOrEmpty(deviceId, nameof(deviceId));
+            Preconditions.NotNullOrEmpty(secret, nameof(secret));
+
             var request = new RestRequest("/account/api/oauth/token", Method.POST);
             request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
             request.AddParameter("grant_type", "device_auth");
@@ -189,6 +203,8 @@ namespace Fortnite.Net.Services
             string accessToken,
             CancellationToken cancellationToken = default)
         {
+            Preconditions.NotNullOrEmpty(accessToken, nameof(accessToken));
+
             var request = new RestRequest($"/account/api/oauth/sessions/kill/{accessToken}");
             await ExecuteAsync(request, true, cancellationToken);
         }
@@ -202,7 +218,6 @@ namespace Fortnite.Net.Services
         /*
          * TODO:
          *
-         * KillSession
          * FindAccounts
          * FindAccount
          * EditAccount

@@ -185,12 +185,15 @@ namespace Fortnite.Net.Services
         /// <param name="killType">The kill type</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public async Task KillSessionsAsync(
+        public async Task<FortniteResponse> KillSessionsAsync(
             SessionKillType killType,
             CancellationToken cancellationToken = default)
         {
             var request = new RestRequest($"/account/api/oauth/sessions/kill?killType={killType}", Method.DELETE);
-            await ExecuteAsync(request, true, cancellationToken);
+            var response = await ExecuteAsync(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
         }
 
         /// <summary>
@@ -199,20 +202,25 @@ namespace Fortnite.Net.Services
         /// <param name="accessToken">The AccessToken from the session to kill</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        public async Task KillSessionAsync(
+        public async Task<FortniteResponse> KillSessionAsync(
             string accessToken,
             CancellationToken cancellationToken = default)
         {
             Preconditions.NotNullOrEmpty(accessToken, nameof(accessToken));
 
             var request = new RestRequest($"/account/api/oauth/sessions/kill/{accessToken}");
-            await ExecuteAsync(request, true, cancellationToken);
+            var response = await ExecuteAsync(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
         }
 
-        public async Task KillCurrentSessionAsync(CancellationToken cancellationToken = default)
+        public async Task<FortniteResponse> KillCurrentSessionAsync(CancellationToken cancellationToken = default)
         {
-            await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)
+            var response = await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)
                 .ConfigureAwait(false);
+
+            return response;
         }
 
         /*

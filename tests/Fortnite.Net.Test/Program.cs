@@ -3,7 +3,9 @@ using Serilog.Core;
 using Serilog.Events;
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Fortnite.Net.Enums;
 
 namespace Fortnite.Net.Test
 {
@@ -18,13 +20,13 @@ namespace Fortnite.Net.Test
             var deviceId = Environment.GetEnvironmentVariable("deviceId");
             var secret = Environment.GetEnvironmentVariable("secret");
 
-            var client = new FortniteApiClientBuilder()
+            await using var client = new FortniteApiClientBuilder()
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret);
+            await client.AccountPublicService.KillSessionsAsync(SessionKillType.ALL);
+            var response = await client.AccountPublicService.KillCurrentSessionAsync();
 
-            
-
-            await Task.Delay(-1);
+            Debugger.Break();
         }
 
         /*private static void RegisterEvents(FortniteApiClient client)

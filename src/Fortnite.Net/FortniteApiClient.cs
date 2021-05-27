@@ -41,7 +41,7 @@ namespace Fortnite.Net
         public bool IsLoggedIn { get; set; }
 
         private readonly Lazy<XmppClient> _xmppClient;
-        protected XmppClient XmppClient
+        internal XmppClient XmppClient
         {
             get
             {

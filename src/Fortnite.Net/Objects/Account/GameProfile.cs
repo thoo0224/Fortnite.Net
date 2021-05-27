@@ -1,5 +1,8 @@
-﻿namespace Fortnite.Net.Objects.Account
+﻿using System.Diagnostics;
+
+namespace Fortnite.Net.Objects.Account
 {
+    [DebuggerDisplay("{" + nameof(DisplayName) + "}")]
     public class GameProfile
     {
 

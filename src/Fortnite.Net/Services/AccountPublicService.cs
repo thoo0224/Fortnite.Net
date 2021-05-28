@@ -1,15 +1,14 @@
-﻿using System;
-using System.ComponentModel;
-using Fortnite.Net.Enums;
+﻿using Fortnite.Net.Enums;
 using Fortnite.Net.Objects;
+using Fortnite.Net.Objects.Account;
 using Fortnite.Net.Objects.Auth;
+using Fortnite.Net.Utils;
 
 using RestSharp;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Objects.Account;
-using Fortnite.Net.Utils;
 
 namespace Fortnite.Net.Services
 {
@@ -67,11 +66,6 @@ namespace Fortnite.Net.Services
             CancellationToken cancellationToken = default)
         {
             Preconditions.NotNullOrEmpty(code, nameof(code));
-
-            var request = new RestRequest("/account/api/oauth/token", Method.POST);
-            request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
-            request.AddParameter("grant_type", "authorization_code");
-            request.AddParameter("code", code ?? Client.AuthConfig.AuthorizationCode);
 
             var response = await GetAccessTokenAsync(GrantType.AuthorizationCode, clientToken, cancellationToken,
                 ("code", code)).ConfigureAwait(false);

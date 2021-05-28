@@ -122,7 +122,7 @@ namespace Fortnite.Net
             }
 
             var exchangeAuth =
-                await LoginWithExchangeAsync(exchangeCode.Data, cancellationToken: cancellationToken);
+                await LoginWithExchangeAsync(exchangeCode.Data, cancellationToken: cancellationToken, fireLogin: false);
 
             var deviceResponse = await AccountPublicService
                 .CreateDeviceAsync(exchangeAuth, cancellationToken)
@@ -142,25 +142,28 @@ namespace Fortnite.Net
         /// <param name="exchangeCode">Exchange code</param>
         /// <param name="clientToken">WebsocketClient token, default is the client token specified in the client builder/</param>
         /// <param name="cancellationToken">Cancellation token</param>
+        /// <param name="fireLogin">If true, it will fire the <see cref="Login"/> event.</param>
         /// <returns>Authentication response</returns>
         public async Task<AuthResponse> LoginWithExchangeAsync(
             ExchangeCode exchangeCode,
             ClientToken clientToken = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            bool fireLogin = false)
         {
             if (exchangeCode == null)
             {
                 throw new ArgumentException("Tried to login with exchange code, but there was no exchange specified in the call.");
             }
 
-            return await LoginWithExchangeAsync(exchangeCode.Code, clientToken, cancellationToken);
+            return await LoginWithExchangeAsync(exchangeCode.Code, clientToken, cancellationToken, fireLogin);
         }
 
-        /// <inheritdoc cref="LoginWithExchangeAsync(Fortnite.Net.Objects.Auth.ExchangeCode,Fortnite.Net.ClientToken,System.Threading.CancellationToken)"/>
+        /// <inheritdoc cref="LoginWithExchangeAsync(Fortnite.Net.Objects.Auth.ExchangeCode,Fortnite.Net.ClientToken,System.Threading.CancellationToken,bool)"/>
         public async Task<AuthResponse> LoginWithExchangeAsync(
             string exchangeCode = null,
             ClientToken clientToken = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            bool fireLogin = false)
         {
             var exchangeCodeUsed = exchangeCode ?? AuthConfig.ExchangeCode;
             if(exchangeCodeUsed == null)
@@ -177,7 +180,10 @@ namespace Fortnite.Net
             }
 
             var responseData = response.Data;
-            await OnLoginAsync(responseData);
+            if (fireLogin)
+            {
+                await OnLoginAsync(responseData);
+            }
 
             return responseData;
         }

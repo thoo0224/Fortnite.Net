@@ -432,6 +432,11 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <summary>
+        /// Gets all the SSO domains
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse<List<string>>> QuerySsoDomainsAsync(CancellationToken cancellationToken = default)
         {
             var request = new RestRequest("/account/api/epicdomains/ssodomains");

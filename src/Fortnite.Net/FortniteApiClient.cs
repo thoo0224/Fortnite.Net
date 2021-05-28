@@ -71,16 +71,19 @@ namespace Fortnite.Net
         public AccountPublicService AccountPublicService { get; set; }
 
         private readonly Action<RestClient> _restClientAction;
+        private readonly string _userAgent;
 
         internal FortniteApiClient(
             AuthConfig authConfig,
             Action<RestClient> restClientActions,
+            string userAgent,
             ClientToken defaultClientToken,
             Platform platform)
         {
             AuthConfig = authConfig;
             DefaultClientToken = defaultClientToken;
             _restClientAction = restClientActions;
+            _userAgent = userAgent;
 
             _xmppClient = new Lazy<XmppClient>(() => new XmppClient(this, platform), true);
             PartyService = new PartyService(this);
@@ -245,6 +248,7 @@ namespace Fortnite.Net
             var restClient = new RestClient(service.BaseUrl);
             _restClientAction?.Invoke(restClient);
             restClient.UseSerializer<NewtonsoftSerializer>();
+            restClient.UserAgent = _userAgent;
 
             return restClient;
         }

@@ -17,14 +17,26 @@ namespace Fortnite.Net
         private readonly AuthConfig _authConfig = new AuthConfig();
 
         private Action<RestClient> _restClientAction;
+        private string _userAgent;
         private ClientToken _clientToken;
         private Platform _platform = Platform.WIN;
+
+        /// <summary>
+        /// Sets the default user agent of the http client.
+        /// </summary>
+        /// <param name="userAgent">User agent</param>
+        /// <returns></returns>
+        public FortniteApiClientBuilder WithUserAgent(string userAgent)
+        {
+            _userAgent = userAgent;
+            return this;
+        }
 
         /// <summary>
         /// Sets the authorization code.
         /// </summary>
         /// <param name="authorizationCode">Authorization code</param>
-        /// <returns>WebsocketClient builder</returns>
+        /// <returns>Client builder</returns>
         public FortniteApiClientBuilder WithAuthorizationCode(string authorizationCode)
         {
             _authConfig.AuthorizationCode = authorizationCode;
@@ -35,7 +47,7 @@ namespace Fortnite.Net
         /// Configures the rest client.
         /// </summary>
         /// <param name="restClientAction">Action for the rest client</param>
-        /// <returns>WebsocketClient builder</returns>
+        /// <returns>Client builder</returns>
         public FortniteApiClientBuilder ConfigureRestClient(Action<RestClient> restClientAction)
         {
             _restClientAction = restClientAction;
@@ -46,7 +58,7 @@ namespace Fortnite.Net
         /// Sets the client token for the fortnite client. (The default client token is <see cref="ClientToken.FortniteIosGameClient"/>
         /// </summary>
         /// <param name="clientToken">WebsocketClient token which you can get from <seealso cref="ClientToken"/> or your own. A client token is 'ClientId:Secret' encoded in base64.</param>
-        /// <returns>WebsocketClient builder</returns>
+        /// <returns>Client builder</returns>
         public FortniteApiClientBuilder WithDefaultClientToken(ClientToken clientToken)
         {
             _clientToken = clientToken;
@@ -96,6 +108,7 @@ namespace Fortnite.Net
             return new FortniteApiClient(
                 _authConfig,
                 _restClientAction,
+                _userAgent,
                 _clientToken ?? ClientToken.FortniteIosGameClient,
                 _platform);
         }

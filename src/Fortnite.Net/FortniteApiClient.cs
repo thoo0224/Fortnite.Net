@@ -122,7 +122,7 @@ namespace Fortnite.Net
             }
 
             var exchangeAuth =
-                await LoginWithExchangeAsync(exchangeCode.Data, cancellationToken: cancellationToken, fireLogin: false);
+                await LoginWithExchangeAsync(exchangeCode.Data, cancellationToken: cancellationToken, fireLogin: true);
 
             var deviceResponse = await AccountPublicService
                 .CreateDeviceAsync(exchangeAuth, cancellationToken)

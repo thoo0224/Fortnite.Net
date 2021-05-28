@@ -7,6 +7,7 @@ using Fortnite.Net.Utils;
 using RestSharp;
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Fortnite.Net.Exceptions;
@@ -251,8 +252,79 @@ namespace Fortnite.Net.Services
                 throw new FortniteException("You need to be logged in to use this.");
             }
 
-            var request = new RestRequest($"/account/api/public/account/{Client.CurrentLogin.AccountId}/deviceAuth");
-            var response = await ExecuteAsync<Device[]>(request, true, cancellationToken)
+            var response = await GetDeviceAuthsAsync(Client.CurrentLogin.AccountId, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Gets the device auth
+        /// </summary>
+        /// <param name="device">The device</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The Fortnite response</returns>
+        public async Task<FortniteResponse<Device>> GetDeviceAuthAsync(
+            Device device,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNull(device, nameof(device));
+
+            var response = await GetDeviceAuthAsync(device.AccountId, device.DeviceId, cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
+
+        /// <inheritdoc cref="GetDeviceAuthAsync(Fortnite.Net.Objects.Auth.Device,System.Threading.CancellationToken)"/>
+        /// <param name="accountId">The account id</param>
+        /// <param name="deviceId">The device id</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        public async Task<FortniteResponse<Device>> GetDeviceAuthAsync(
+            string accountId,
+            string deviceId,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNull(accountId, nameof(accountId));
+            Preconditions.NotNull(deviceId, nameof(deviceId));
+
+            var request = new RestRequest($"/account/api/public/account/{accountId}/deviceAuth/{deviceId}");
+            var response = await ExecuteAsync<Device>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Deletes the device auth
+        /// </summary>
+        /// <param name="device">The device</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The Fortnite response</returns>
+        public async Task<FortniteResponse<Device>> DeleteDeviceAuthAsync(
+            Device device,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNull(device, nameof(device));
+
+            var response = await DeleteDeviceAuthAsync(device.AccountId, device.DeviceId, cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
+
+        /// <inheritdoc cref="DeleteDeviceAuthAsync(Fortnite.Net.Objects.Auth.Device,System.Threading.CancellationToken)"/>
+        /// <param name="accountId">The account id</param>
+        /// <param name="deviceId">The device id</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        public async Task<FortniteResponse<Device>> DeleteDeviceAuthAsync(
+            string accountId,
+            string deviceId,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNull(accountId, nameof(accountId));
+            Preconditions.NotNull(deviceId, nameof(deviceId));
+
+            var request = new RestRequest($"/account/api/public/account/{accountId}/deviceAuth/{deviceId}", Method.DELETE);
+            var response = await ExecuteAsync<Device>(request, true, cancellationToken)
                 .ConfigureAwait(false);
 
             return response;
@@ -325,7 +397,7 @@ namespace Fortnite.Net.Services
         /// <summary>
         /// Finds a profile by display name
         /// </summary>
-        /// <param name="displayName">The display name of the profile</param>
+        /// <param name="displayName">The display name of the account</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse<GameProfile>> FindAccountByDisplayNameAsync(
@@ -344,17 +416,26 @@ namespace Fortnite.Net.Services
         /// <summary>
         /// Finds a profile by email
         /// </summary>
-        /// <param name="email">The email of the profile</param>
+        /// <param name="accountEmail">The email of the account</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse<GameProfile>> FindAccountByEmailAsync(
-            string email,
+            string accountEmail,
             CancellationToken cancellationToken = default)
         {
-            Preconditions.NotNullOrEmpty(email, nameof(email));
+            Preconditions.NotNullOrEmpty(accountEmail, nameof(accountEmail));
 
-            var request = new RestRequest($"/account/api/public/account/email/{email}");
+            var request = new RestRequest($"/account/api/public/account/email/{accountEmail}");
             var response = await ExecuteAsync<GameProfile>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        public async Task<FortniteResponse<List<string>>> QuerySsoDomainsAsync(CancellationToken cancellationToken = default)
+        {
+            var request = new RestRequest("/account/api/epicdomains/ssodomains");
+            var response = await ExecuteAsync<List<string>>(request, token: cancellationToken)
                 .ConfigureAwait(false);
 
             return response;
@@ -363,19 +444,12 @@ namespace Fortnite.Net.Services
         /*
          * TODO:
          *
-         * FindAccounts
-         * FindAccount
          * EditAccount
          * GetAccountMetaData
-         * GetDeviceAuths
-         * GetDeviceAuth
-         * DeleteDeviceAuth
-         * GetExternalAuths
          * GetExternalAuth
          * CreateExternalAuth
          * RemoveExternalAuth
          * FindAccountById
-         * QuerySsoDomains
          */
 
     }

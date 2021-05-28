@@ -22,6 +22,13 @@ namespace Fortnite.Net.Services
         {
         }
 
+        /// <summary>
+        /// Authenticates with <paramref name="grantType"/>
+        /// </summary>
+        /// <param name="grantType"><see cref="GrantType"/></param>
+        /// <param name="token">Client token, if null it will use the one provided in the client builder.</param>
+        /// <param name="fields">The fields for the request</param>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse<AuthResponse>> GetAccessTokenAsync(
             GrantType grantType,
             ClientToken token = null,
@@ -33,6 +40,7 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <inheritdoc cref="GetAccessTokenAsync(Fortnite.Net.Enums.GrantType,Fortnite.Net.ClientToken,System.Tuple"/>
         public async Task<FortniteResponse<AuthResponse>> GetAccessTokenAsync(
             GrantType grantType,
             ClientToken clientToken = null,

@@ -7,6 +7,10 @@
         public string AccountId { get; set; }
         public string Secret { get; set; }
 
+        public string UserAgent { get; set; }
+        public DeviceLocation Created { get; set; }
+        public DeviceLocation LastAccess { get; set; }
+
         public Device(string deviceId, string accountId, string secret)
         {
             DeviceId = deviceId;

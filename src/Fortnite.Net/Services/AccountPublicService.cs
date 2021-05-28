@@ -9,6 +9,7 @@ using RestSharp;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Fortnite.Net.Exceptions;
 
 namespace Fortnite.Net.Services
 {
@@ -204,6 +205,56 @@ namespace Fortnite.Net.Services
                 ("account_id", accountId),
                 ("device_id", deviceId),
                 ("secret", secret)).ConfigureAwait(false);
+            return response;
+        }
+
+        /// <summary>
+        /// Gets all the device auths
+        /// </summary>
+        /// <param name="device">Device</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The Fortnite response</returns>
+        public async Task<FortniteResponse<Device[]>> GetDeviceAuthsAsync(
+            Device device,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNull(device, nameof(device));
+
+            var response = await GetDeviceAuthsAsync(device.AccountId, cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
+
+        /// <inheritdoc cref="GetDeviceAuthsAsync(Fortnite.Net.Objects.Auth.Device,System.Threading.CancellationToken)"/>
+        /// <param name="accountId">Id of the account</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        public async Task<FortniteResponse<Device[]>> GetDeviceAuthsAsync(
+            string accountId,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNullOrEmpty(accountId, nameof(accountId));
+
+            var request = new RestRequest($"/account/api/public/account/{accountId}/deviceAuth");
+            var response = await ExecuteAsync<Device[]>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <inheritdoc cref="GetDeviceAuthsAsync(Fortnite.Net.Objects.Auth.Device,System.Threading.CancellationToken)"/>
+        /// <param name="cancellationToken">Cancellation token</param>
+        public async Task<FortniteResponse<Device[]>> GetDeviceAuthsAsync(
+            CancellationToken cancellationToken = default)
+        {
+            if (!Client.IsLoggedIn || Client.CurrentLogin == null)
+            {
+                throw new FortniteException("You need to be logged in to use this.");
+            }
+
+            var request = new RestRequest($"/account/api/public/account/{Client.CurrentLogin.AccountId}/deviceAuth");
+            var response = await ExecuteAsync<Device[]>(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
             return response;
         }
 

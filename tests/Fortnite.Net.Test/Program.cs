@@ -23,7 +23,7 @@ namespace Fortnite.Net.Test
             await using var client = new FortniteApiClientBuilder()
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret);
-            var response = await client.AccountPublicService.FindAccountByDisplayNameAsync("Ninja");
+            var response = await client.AccountPublicService.GetDeviceAuthsAsync();
             if (!response.IsSuccessful)
             {
                 Log.Error("Error: {Message} ({Code})", response.Error.ErrorMessage, response.HttpStatusCode);

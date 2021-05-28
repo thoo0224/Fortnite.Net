@@ -19,7 +19,40 @@ namespace Fortnite.Net.Services
         public override string BaseUrl { get; } = "https://account-public-service-prod.ol.epicgames.com";
 
         internal AccountPublicService(FortniteApiClient client)
-            : base(client) { }
+            : base(client)
+        {
+        }
+
+        public async Task<FortniteResponse<AuthResponse>> GetAccessTokenAsync(
+            GrantType grantType,
+            ClientToken token = null,
+            params (string Key, string value)[] fields)
+        {
+            var response = await GetAccessTokenAsync(grantType, token, default, fields)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        public async Task<FortniteResponse<AuthResponse>> GetAccessTokenAsync(
+            GrantType grantType,
+            ClientToken clientToken = null,
+            CancellationToken cancellationToken = default,
+            params (string Key, string value)[] fields)
+        {
+            var request = new RestRequest("/account/api/oauth/token", Method.POST);
+            request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
+            request.AddParameter("grant_type", grantType.GetStringValue());
+
+            foreach (var (k, v) in fields)
+            {
+                request.AddParameter(k, v);
+            }
+
+            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
 
         /// <summary>
         /// Authenticates with an authorization code.
@@ -40,8 +73,8 @@ namespace Fortnite.Net.Services
             request.AddParameter("grant_type", "authorization_code");
             request.AddParameter("code", code ?? Client.AuthConfig.AuthorizationCode);
 
-            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken)
-                .ConfigureAwait(false);
+            var response = await GetAccessTokenAsync(GrantType.AuthorizationCode, clientToken, cancellationToken,
+                ("code", code)).ConfigureAwait(false);
             return response;
         }
 
@@ -92,13 +125,8 @@ namespace Fortnite.Net.Services
         {
             Preconditions.NotNullOrEmpty(exchangeCode, nameof(exchangeCode));
 
-            var request = new RestRequest("/account/api/oauth/token", Method.POST);
-            request.AddHeader("Authorization", $"basic {(clientToken ?? Client.DefaultClientToken).Base64}");
-            request.AddParameter("grant_type", "exchange_code");
-            request.AddParameter("exchange_code", exchangeCode);
-
-            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken)
-                .ConfigureAwait(false);
+            var response = await GetAccessTokenAsync(GrantType.ExchangeCode, clientToken, cancellationToken,
+                ("exchange_code", exchangeCode)).ConfigureAwait(false);
             return response;
         }
 
@@ -170,15 +198,10 @@ namespace Fortnite.Net.Services
             Preconditions.NotNullOrEmpty(deviceId, nameof(deviceId));
             Preconditions.NotNullOrEmpty(secret, nameof(secret));
 
-            var request = new RestRequest("/account/api/oauth/token", Method.POST);
-            request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
-            request.AddParameter("grant_type", "device_auth");
-            request.AddParameter("account_id", accountId);
-            request.AddParameter("device_id", deviceId);
-            request.AddParameter("secret", secret);
-
-            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken)
-                .ConfigureAwait(false);
+            var response = await GetAccessTokenAsync(GrantType.DeviceAuth, clientToken, cancellationToken,
+                ("account_id", accountId),
+                ("device_id", deviceId),
+                ("secret", secret)).ConfigureAwait(false);
             return response;
         }
 
@@ -231,9 +254,10 @@ namespace Fortnite.Net.Services
         /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse> KillCurrentSessionAsync(CancellationToken cancellationToken = default)
         {
-            if (Client.IsLoggedIn || Client.CurrentLogin == null)
+            if (!Client.IsLoggedIn || Client.CurrentLogin == null)
             {
-                throw new InvalidOperationException("Tried killing the current session but the client was not logged in.");
+                throw new InvalidOperationException(
+                    "Tried killing the current session but the client was not logged in.");
             }
 
             var response = await KillSessionAsync(Client.CurrentLogin.AccessToken, cancellationToken)

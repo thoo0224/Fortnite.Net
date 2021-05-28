@@ -25,10 +25,13 @@ namespace Fortnite.Net.Services
 
         internal virtual async Task<FortniteResponse> ExecuteAsync(RestRequest request, bool withAuth = false,
             CancellationToken token = default)
-            => await ExecuteAsync<object>(request, withAuth, token).ConfigureAwait(false);
+            => await ExecuteAsync<object>(request, withAuth, token, false).ConfigureAwait(false);
 
-        internal virtual async Task<FortniteResponse<T>> ExecuteAsync<T>(RestRequest request, bool withAuth = false, 
-            CancellationToken token = default)
+        internal virtual async Task<FortniteResponse<T>> ExecuteAsync<T>(
+            RestRequest request,
+            bool withAuth = false,
+            CancellationToken token = default,
+            bool withData = true)
         {
             if(withAuth)
             {
@@ -43,11 +46,13 @@ namespace Fortnite.Net.Services
                 HttpStatusCode = response.StatusCode
             };
 
-            if (response.IsSuccessful)
+            if (response.IsSuccessful && withData)
             {
                 fortniteResponse.Data =
                     JsonConvert.DeserializeObject<T>(content, NewtonsoftSerializer.SerializerSettings);
-            } else
+            }
+
+            if(!response.IsSuccessful)
             {
                 fortniteResponse.Error =
                     JsonConvert.DeserializeObject<EpicError>(content, NewtonsoftSerializer.SerializerSettings);

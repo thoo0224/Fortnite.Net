@@ -93,10 +93,9 @@ namespace Fortnite.Net.Xmpp
             var writer = XmlWriter.Create(builder, WriterSettings);
 
             writer.WriteStartElement("open", "urn:ietf:params:xml:ns:xmpp-framing");
-            {
-                writer.WriteAttributeString("to", "prod.ol.epicgames.com");
-                writer.WriteAttributeString("version", "1.0");
-            }
+            writer.WriteAttributeString("to", "prod.ol.epicgames.com");
+            writer.WriteAttributeString("version", "1.0");
+
             await writer.WriteEndElementAsync().ConfigureAwait(false);
             await writer.FlushAsync().ConfigureAwait(false);
 
@@ -115,9 +114,8 @@ namespace Fortnite.Net.Xmpp
             var writer = XmlWriter.Create(builder, WriterSettings);
 
             writer.WriteStartElement("auth", "urn:ietf:params:xml:ns:xmpp-sasl");
-            {
-                writer.WriteAttributeString("mechanism", "PLAIN");
-            }
+            writer.WriteAttributeString("mechanism", "PLAIN");
+
             await writer.WriteStringAsync(auth).ConfigureAwait(false);
             await writer.WriteEndElementAsync().ConfigureAwait(false);
             await writer.FlushAsync().ConfigureAwait(false);
@@ -280,7 +278,7 @@ namespace Fortnite.Net.Xmpp
             }
 
             var from = element.GetAttribute("from");
-            var id = element.GetAttribute("from").Split("@")[0];
+            var id = from.Split("@")[0];
             var message = element.GetElementsByTagName("body")[0].InnerText;
 
             await OnMessageReceivedAsync(new ChatMessageReceivedEventArgs
@@ -304,9 +302,7 @@ namespace Fortnite.Net.Xmpp
 
             writer.WriteStartElement("presence");
             writer.WriteStartElement("status");
-            {
-                await writer.WriteStringAsync(JsonConvert.SerializeObject(presence)).ConfigureAwait(false);
-            }
+            await writer.WriteStringAsync(JsonConvert.SerializeObject(presence)).ConfigureAwait(false);
             await writer.WriteEndElementAsync().ConfigureAwait(false);
             writer.WriteStartElement("delay", "urn:xmpp:delay");
             {
@@ -334,37 +330,31 @@ namespace Fortnite.Net.Xmpp
                 case "_xmpp_bind1":
                 {
                     writer.WriteStartElement("iq");
-                    {
-                        writer.WriteAttributeString("id", id);
-                        writer.WriteAttributeString("type", "set");
-                        writer.WriteStartElement("bind", "urn:ietf:params:xml:ns:xmpp-bind");
-                        {
-                            writer.WriteStartElement("resource");
-                            {
-                                await writer.WriteStringAsync(Resource).ConfigureAwait(false);
-                            }
-                            await writer.WriteEndElementAsync().ConfigureAwait(false);
-                        }
-                        await writer.WriteEndElementAsync().ConfigureAwait(false);
-                    }
-                    await writer.WriteEndElementAsync().ConfigureAwait(false);
-                    await writer.FlushAsync().ConfigureAwait(false);
+                    writer.WriteAttributeString("id", id);
+                    writer.WriteAttributeString("type", "set");
+                    writer.WriteStartElement("bind", "urn:ietf:params:xml:ns:xmpp-bind");
 
+                    writer.WriteStartElement("resource");
+                    await writer.WriteStringAsync(Resource).ConfigureAwait(false);
+
+                    await writer.WriteEndElementAsync().ConfigureAwait(false);
+                    await writer.WriteEndElementAsync().ConfigureAwait(false);
+                    await writer.WriteEndElementAsync().ConfigureAwait(false);
+                    
+                    await writer.FlushAsync().ConfigureAwait(false);
                     await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
                     break;
                 }
                 case "_xmpp_session1":
                 {
                     writer.WriteStartElement("iq");
-                    {
-                        writer.WriteAttributeString("id", id);
-                        writer.WriteAttributeString("type", "set");
-                        writer.WriteStartElement("session", "urn:ietf:params:xml:ns:xmpp-session");
-                        await writer.WriteEndElementAsync().ConfigureAwait(false);
-                    }
+                    writer.WriteAttributeString("id", id);
+                    writer.WriteAttributeString("type", "set");
+                    writer.WriteStartElement("session", "urn:ietf:params:xml:ns:xmpp-session");
                     await writer.WriteEndElementAsync().ConfigureAwait(false);
-                    await writer.FlushAsync().ConfigureAwait(false);
+                    await writer.WriteEndElementAsync().ConfigureAwait(false);
 
+                    await writer.FlushAsync().ConfigureAwait(false);
                     await SendMessageAsync(builder.ToString()).ConfigureAwait(false);
                     break;
                 }
@@ -383,12 +373,10 @@ namespace Fortnite.Net.Xmpp
             writer.WriteStartElement("presence");
             writer.WriteAttributeString("to", $"Party-{CurrentParty.Id}@muc.prod.ol.epicgames.com/{Client.CurrentLogin.DisplayName}:{Client.CurrentLogin.AccountId}:{Resource}");
             writer.WriteStartElement("x", "http://jabber.org/protocol/muc");
-            {
-                writer.WriteStartElement("history");
-                {
-                    writer.WriteAttributeString("maxstanzas", "50");
-                }
-            }
+
+            writer.WriteStartElement("history");
+            writer.WriteAttributeString("maxstanzas", "50");
+
             await writer.WriteEndElementAsync().ConfigureAwait(false);
             await writer.WriteEndElementAsync().ConfigureAwait(false);
             await writer.WriteEndElementAsync().ConfigureAwait(false);

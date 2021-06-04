@@ -1,4 +1,5 @@
-﻿using Fortnite.Net.Objects;
+﻿using System;
+using Fortnite.Net.Objects;
 using Fortnite.Net.Objects.Party;
 
 using RestSharp;
@@ -6,6 +7,7 @@ using RestSharp;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Fortnite.Net.Services
 {
@@ -75,7 +77,6 @@ namespace Fortnite.Net.Services
             var partyResponse = await GetPartyAsync(partyId, cancellationToken)
                 .ConfigureAwait(false);
             Client.XmppClient.CurrentParty = partyResponse.Data;
-            await Client.XmppClient.JoinPartyChatAsync();
             return response;
         }
 
@@ -90,11 +91,29 @@ namespace Fortnite.Net.Services
             CancellationToken cancellationToken = default)
         {
             var request = new RestRequest($"/parties/{partyId}");
-
             var response = await ExecuteAsync<Party>(request, true, cancellationToken)
                 .ConfigureAwait(false);
+
             return response;
         }
+
+        public async Task<FortniteResponse> UpdateMemberAsync(
+            Party party, 
+            PartyMember member,
+            CancellationToken cancellationToken = default)
+        {
+            var body = new PartyMemberUpdate(member.Revision);
+
+            var request = new RestRequest($"/parties/{party.Id}/members/{member.Id}/meta", Method.PATCH);
+            request.AddJsonBody(body);
+
+            var response = await ExecuteAsync(request, true, cancellationToken)
+                .ConfigureAwait(false);
+
+            party.Revision++;
+            party.UpdatedAt = DateTime.Now;
+            return response;
+        } 
 
     }
 }

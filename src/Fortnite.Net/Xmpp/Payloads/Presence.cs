@@ -9,7 +9,7 @@ namespace Fortnite.Net.Xmpp.Payloads
 
         public string Status { get; set; }
         public string SessionId { get; set; }
-        public Dictionary<string, object> Properties { get; set; }
+        public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
         [J("bIsPlaying")] public bool IsPlaying { get; set; }
         [J("bIsJoinable")] public bool IsJoinable { get; set; }
         [J("bHasVoiceSupport")] public bool HasVoiceSupport { get; set; }

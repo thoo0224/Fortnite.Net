@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fortnite.Net.Xmpp.Events
+namespace Fortnite.Net.Objects.Notifications
 {
-    public class BaseEvent
+    public class BaseNotificationBody
     {
 
         public DateTime Sent { get; set; }

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-using Fortnite.Net.Xmpp;
+﻿using Fortnite.Net.Xmpp;
+
+using Newtonsoft.Json;
+
+using System.Collections.Generic;
 
 namespace Fortnite.Net.Objects.Party
 {
@@ -30,7 +33,7 @@ namespace Fortnite.Net.Objects.Party
             if(isJoining)
             {
                 Connection.YieldLeadership = false;
-                Meta.Add("urn:epic:member:joinrequestusers_j", new PartyJoinRequest(client).ToString());
+                Meta.Add("urn:epic:member:joinrequestusers_j", JsonConvert.SerializeObject(new PartyJoinRequest(client), NewtonsoftSerializer.SerializerSettings));
             }
         }
 

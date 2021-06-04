@@ -1,6 +1,5 @@
 ﻿using Fortnite.Net.Attributes;
 using Fortnite.Net.Xmpp.EventArgs;
-using Fortnite.Net.Xmpp.Events;
 using Fortnite.Net.Xmpp.Notifications;
 
 using Newtonsoft.Json;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
+using Fortnite.Net.Objects.Notifications;
 
 namespace Fortnite.Net.Xmpp
 {
@@ -50,7 +50,7 @@ namespace Fortnite.Net.Xmpp
         public async Task HandleNotificationAsync(XmlDocument document)
         {
             var content = document?.DocumentElement?.InnerText!;
-            var baseBody = JsonConvert.DeserializeObject<BaseEvent>(content ?? throw new InvalidOperationException(), NewtonsoftSerializer.SerializerSettings);
+            var baseBody = JsonConvert.DeserializeObject<BaseNotificationBody>(content ?? throw new InvalidOperationException(), NewtonsoftSerializer.SerializerSettings);
             if(baseBody == null)
             {
                 return;

@@ -5,34 +5,34 @@ namespace Fortnite.Net.Enums
     public enum GrantType
     {
 
-        [StringValueAttribute("authorization_code")]
+        [StringValue("authorization_code")]
         AuthorizationCode,
 
-        [StringValueAttribute("client_credentials")]
+        [StringValue("client_credentials")]
         ClientCredentials,
 
-        [StringValueAttribute("device_code")]
+        [StringValue("device_code")]
         DeviceCode,
 
-        [StringValueAttribute("device_auth")]
+        [StringValue("device_auth")]
         DeviceAuth,
 
-        [StringValueAttribute("exchange_code")]
+        [StringValue("exchange_code")]
         ExchangeCode,
 
-        [StringValueAttribute("external_auth")]
+        [StringValue("external_auth")]
         ExternalAuth,
 
-        [StringValueAttribute("opt")]
+        [StringValue("opt")]
         Opt,
 
-        [StringValueAttribute("password")]
+        [StringValue("password")]
         Password,
 
-        [StringValueAttribute("refresh_token")]
+        [StringValue("refresh_token")]
         RefreshToken,
 
-        [StringValueAttribute("token_to_token")]
+        [StringValue("token_to_token")]
         TokenToToken
 
     }

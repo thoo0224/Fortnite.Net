@@ -15,7 +15,7 @@ namespace Fortnite.Net
         {
             ContractResolver = new DefaultContractResolver
             {
-                NamingStrategy = new CamelCaseNamingStrategy(false, false),
+                NamingStrategy = new CamelCaseNamingStrategy(true, false),
             }
         };
 

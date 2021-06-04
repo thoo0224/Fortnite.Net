@@ -49,7 +49,6 @@ namespace Fortnite.Net.Objects.Party
             }
 
             VerifyParty();
-
             if (Client.CurrentParty != null)
             {
                 throw new FortniteException("Already in a party.");
@@ -57,6 +56,7 @@ namespace Fortnite.Net.Objects.Party
 
             await Client.Client.PartyService.JoinPartyAsync(PartyId);
             await Client.Client.PartyService.DeletePingAsync(SentBy);
+
             ExpiredOrDeclined = true;
         }
 

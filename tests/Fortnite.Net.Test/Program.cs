@@ -1,11 +1,12 @@
-﻿using Serilog;
+﻿using Fortnite.Net.Enums;
+
+using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
 using System;
-using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Enums;
 
 namespace Fortnite.Net.Test
 {
@@ -20,19 +21,26 @@ namespace Fortnite.Net.Test
             var deviceId = Environment.GetEnvironmentVariable("deviceId");
             var secret = Environment.GetEnvironmentVariable("secret");
 
-            await using var client = new FortniteApiClientBuilder()
+            var client = new FortniteApiClientBuilder()
+                .WithPlatform(Platform.WIN)
+                .WithDefaultClientToken(ClientToken.FortniteIosGameClient)
                 .Create();
-            await client.LoginWithDeviceAsync(accountId, deviceId, secret);
-            var response = await client.AccountPublicService.GetDeviceAuthsAsync();
-            if (!response.IsSuccessful)
-            {
-                Log.Error("Error: {Message} ({Code})", response.Error.ErrorMessage, response.HttpStatusCode);
-            }
+            await client.LoginWithDeviceAsync(accountId, deviceId, secret, ClientToken.FortniteIosGameClient);
 
-            Debugger.Break();
+            RegisterEvents(client);
+            var thread = new Thread(async () =>
+            {
+                await client.XmppClient.StartAsync();
+            })
+            {
+                IsBackground = true
+            };
+            thread.Start();
+
+            await Task.Delay(-1);
         }
 
-        /*private static void RegisterEvents(FortniteApiClient client)
+        private static void RegisterEvents(FortniteApiClient client)
         {
             client.XmppClient.Disconnected += () =>
             {
@@ -78,7 +86,7 @@ namespace Fortnite.Net.Test
                 Log.Information("Received chat message. {From}: {Message}", e.From, e.Message);
                 return Task.CompletedTask;
             };
-        }*/
+        }
 
         private static ILogger CreateLogger()
         {

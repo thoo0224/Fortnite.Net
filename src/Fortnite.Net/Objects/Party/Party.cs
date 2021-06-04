@@ -5,7 +5,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
+using Fortnite.Net.Xmpp.Meta;
+using Fortnite.Net.Xmpp.Payloads;
 using J = Newtonsoft.Json.JsonPropertyAttribute;
 
 namespace Fortnite.Net.Objects.Party
@@ -28,7 +30,7 @@ namespace Fortnite.Net.Objects.Party
 
         public List<PartyInvitation> Invites { get; set; }
 
-        public List<PartyMember> Members { get; set; }
+        public List<PartyMember> Members { get; set; } = new List<PartyMember>();
 
         public List<PartyMember> Applicants { get; set; }
 
@@ -38,7 +40,28 @@ namespace Fortnite.Net.Objects.Party
 
         public Dictionary<string, string> Meta { get; set; }
 
-        [JsonIgnore] public PartyMember Leader => Members.FirstOrDefault(x => x.Role.Equals("CAPTAIN"));
+        public async Task UpdatePresence(XmppClient client)
+        {
+            var presence = new Presence
+            {
+                Status = $"Battle Royale Lobby - {Members.Count} / {Config["max_size"]} in Party",
+                Properties = new Dictionary<string, object>
+                {
+                    { "FortBasicInfo_j", new FortBasicInfo()},
+                    { "FortGameplayStats_j", new FortGameplayStats()},
+                    { "FortLFG_I", "0"},
+                    { "FortPartySize_i", 1},
+                    { "FortSubGame_i", 1},
+                    { "InUnjoinableMatch_b", false},
+                    { "party.joininfodata.286331153_j", new
+                    {
+                        bIsPrivate = ""
+                    }}
+                }
+            };
+
+            await client.SendPresenceAsync(presence);
+        }
 
     }
 }

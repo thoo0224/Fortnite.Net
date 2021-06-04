@@ -16,7 +16,7 @@ namespace Fortnite.Net.Objects.Party
                 {
                     Id = client.Client.CurrentLogin.AccountId,
                     DisplayName = client.Client.CurrentLogin.DisplayName,
-                    Platform = client.Platform.ToString().ToUpper(),
+                    Platform = "WIN",
                     Data = new Dictionary<string, string>
                     {
                         {"CrossplayReference", "1"},

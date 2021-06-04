@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Fortnite.Net.Xmpp.Events
+namespace Fortnite.Net.Objects.Notifications
 {
-    public class PingEvent : BaseEvent
+    public class PingNotificationBody : BaseNotificationBody
     {
 
         public string Ns { get; set; }

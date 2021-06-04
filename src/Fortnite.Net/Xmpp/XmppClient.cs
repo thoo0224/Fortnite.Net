@@ -1,7 +1,6 @@
 ﻿using Fortnite.Net.Enums;
 using Fortnite.Net.Objects.Party;
 using Fortnite.Net.Xmpp.EventArgs;
-using Fortnite.Net.Xmpp.Events;
 using Fortnite.Net.Xmpp.Payloads;
 
 using Newtonsoft.Json;
@@ -17,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Fortnite.Net.Objects.Notifications;
 
 namespace Fortnite.Net.Xmpp
 {
@@ -37,6 +37,7 @@ namespace Fortnite.Net.Xmpp
         public FortniteApiClient Client { get; set; }
 
         public Party CurrentParty { get; set; }
+
         public Presence Presence { get; set; }
         public Platform Platform { get; set; }
 
@@ -44,7 +45,7 @@ namespace Fortnite.Net.Xmpp
         public event Func<Task> Connected;
         public event Func<Task> Disconnected;
         public event Func<NotificationReceivedEventArgs, Task> NotificationReceived;
-        public event Func<PingEvent, Task> Ping;
+        public event Func<PingNotificationBody, Task> Ping;
         public event Func<PartyInvitation, Task> PartyInvitation;
         public event Func<PartyChatMessageReceivedEventArgs, Task> PartyChatMessageReceived;
         public event Func<ChatMessageReceivedEventArgs, Task> ChatMessageReceived;
@@ -82,7 +83,7 @@ namespace Fortnite.Net.Xmpp
             await OpenAsync();
             await HandleMessagesAsync();
         }
-        
+
         /// <summary>
         /// Sends the message when connecting to Epics XMPP services.
         /// </summary>
@@ -219,6 +220,8 @@ namespace Fortnite.Net.Xmpp
                     await HandleChatMessageAsync(document);
                     return;
                 case "error":
+                    Debugger.Break();
+                    break;
                 case "headline":
                     return;
             }
@@ -450,7 +453,7 @@ namespace Fortnite.Net.Xmpp
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public async Task OnPingAsync(PingEvent e)
+        public async Task OnPingAsync(PingNotificationBody e)
         {
             if(Ping != null)
             {

@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3BFC8317-C740-4D5F-B0C1-CDC599E784F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fortnite.Net", "src\Fortnite.Net\Fortnite.Net.csproj", "{2DAD0E4A-5B48-493B-A029-BEF7F296FC20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fortnite.Net", "src\Fortnite.Net\Fortnite.Net.csproj", "{2DAD0E4A-5B48-493B-A029-BEF7F296FC20}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{90DE4EBE-985E-4357-AF2A-B5A0E8196044}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fortnite.Net.Test", "tests\Fortnite.Net.Test\Fortnite.Net.Test.csproj", "{A6445125-83F1-461F-BFDF-1AA97211C4E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fortnite.Net.Test", "tests\Fortnite.Net.Test\Fortnite.Net.Test.csproj", "{A6445125-83F1-461F-BFDF-1AA97211C4E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,7 +11,6 @@
   - [ ] AccountPublicService (75%)
   - [ ] PartyService (69%)
   - [ ] FortniteService
-    - [ ] MCP
   - [ ] EventsService
   - [ ] CodeRedemptionService
   - [ ] ChannelsService
@@ -26,13 +25,14 @@
   - [ ] LinksService
   - [ ] PresenceService
   - [ ] UserSearchService
-- XMPP
+- XMPP (Low priority)
   - [x] Connect
   - [x] Chat
   - [ ] Friends
   - Party
     - [x] Base
     - [ ] Cosmetics
+- MCP (Low priority)
 
 ### Packages
 - Newtonsoft.Json ([License](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md))

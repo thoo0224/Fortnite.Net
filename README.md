@@ -4,8 +4,8 @@
 ### Features
 
 - Chat
-  - [x] Friend
-  - [ ] Party
+  - [x] Friends
+  - [ ] Parties
   - [ ] Commands
 - Services
   - [ ] AccountPublicService (75%)

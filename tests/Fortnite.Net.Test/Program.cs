@@ -5,6 +5,7 @@ using Serilog.Core;
 using Serilog.Events;
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +28,8 @@ namespace Fortnite.Net.Test
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret, ClientToken.FortniteIosGameClient);
 
-            RegisterEvents(client);
+            Debugger.Break();
+            /*RegisterEvents(client);
             var thread = new Thread(async () =>
             {
                 await client.XmppClient.StartAsync();
@@ -37,7 +39,7 @@ namespace Fortnite.Net.Test
             };
             thread.Start();
 
-            await Task.Delay(-1);
+            await Task.Delay(-1);*/
         }
 
         private static void RegisterEvents(FortniteApiClient client)

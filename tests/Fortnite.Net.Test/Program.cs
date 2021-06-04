@@ -29,7 +29,7 @@ namespace Fortnite.Net.Test
             await client.LoginWithDeviceAsync(accountId, deviceId, secret, ClientToken.FortniteIosGameClient);
 
             Debugger.Break();
-            /*RegisterEvents(client);
+            RegisterEvents(client);
             var thread = new Thread(async () =>
             {
                 await client.XmppClient.StartAsync();
@@ -39,7 +39,7 @@ namespace Fortnite.Net.Test
             };
             thread.Start();
 
-            await Task.Delay(-1);*/
+            await Task.Delay(-1);
         }
 
         private static void RegisterEvents(FortniteApiClient client)

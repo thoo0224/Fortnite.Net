@@ -7,7 +7,9 @@ This library is not finished and can contain bugs/issues, if you found any bugs 
 ### Example
 With the FortniteApiClientBuilder you can create an instance of the FortniteApi.
 ```cs
-FortniteApiClient client = new FortniteApiClientBuilder()
+// Using the using directive so if the client is not used anymore it will kill the current
+// and shutdown the refresh access token scheduler.
+using var client = new FortniteApiClientBuilder()
   .WithDefaultClientToken(ClientToken.FortniteIosGameClient) // Default
   .WithUserAgent("Not Fortnite/++Fortnite+Release-xx.x-CL-xxxxxx IOS/xx.x.x :)")
   .WithPlatform(Platform.WIN) // Default, used for XMPP

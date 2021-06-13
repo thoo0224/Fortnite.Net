@@ -63,7 +63,13 @@ namespace Fortnite.Net.Services
             return response;
         }
 
-
+        /// <summary>
+        /// Refreshes the access token
+        /// </summary>
+        /// <param name="refreshToken">Refresh token</param>
+        /// <param name="clientToken">Client token</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns></returns>
         public async Task<FortniteResponse<AuthResponse>> RefreshAccessTokenAsync(
             string refreshToken,
             ClientToken clientToken = null,
@@ -77,6 +83,7 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+        /// <inheritdoc cref="RefreshAccessTokenAsync(string,Fortnite.Net.ClientToken,System.Threading.CancellationToken)"/>
         public async Task<FortniteResponse<AuthResponse>> RefreshAccessTokenAsync(
             ClientToken clientToken = null,
             CancellationToken cancellationToken = default)

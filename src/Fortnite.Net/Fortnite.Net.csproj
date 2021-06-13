@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Quartz" Version="3.3.2" />
+    <PackageReference Include="Quartz.Jobs" Version="3.3.2" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
   </ItemGroup>
 

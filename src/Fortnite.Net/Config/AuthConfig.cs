@@ -20,5 +20,10 @@ namespace Fortnite.Net.Config
         /// </summary>
         public Device Device { get; set; }
 
+        /// <summary>
+        /// If the client should auto refresh.
+        /// </summary>
+        public bool AutoRefresh { get; set; }
+
     }
 }

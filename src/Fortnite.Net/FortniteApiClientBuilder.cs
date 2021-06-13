@@ -99,6 +99,12 @@ namespace Fortnite.Net
             return this;
         }
 
+        public FortniteApiClientBuilder WithAutoRefresh(bool autoRefresh)
+        {
+            _authConfig.AutoRefresh = autoRefresh;
+            return this;
+        }
+
         /// <summary>
         /// Creates the api client.
         /// </summary>

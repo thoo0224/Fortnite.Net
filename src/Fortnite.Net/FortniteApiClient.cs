@@ -103,14 +103,16 @@ namespace Fortnite.Net
             Action<RestClient> restClientActions,
             string userAgent,
             ClientToken defaultClientToken,
-            Platform platform)
+            Platform platform,
+            IScheduler scheduler)
         {
-            AuthConfig = authConfig;
-            DefaultClientToken = defaultClientToken;
             _restClientAction = restClientActions;
             _userAgent = userAgent;
-
             _xmppClient = new Lazy<XmppClient>(() => new XmppClient(this, platform), true);
+            _scheduler = scheduler;
+
+            AuthConfig = authConfig;
+            DefaultClientToken = defaultClientToken;
             PartyService = new PartyService(this);
             FortniteService = new FortniteService(this);
             AccountPublicService = new AccountPublicService(this);
@@ -124,8 +126,11 @@ namespace Fortnite.Net
         {
             if (AuthConfig.AutoRefresh)
             {
-                var schedulerFactory = new StdSchedulerFactory();
-                _scheduler = await schedulerFactory.GetScheduler();
+                if (_scheduler == null)
+                {
+                    var schedulerFactory = new StdSchedulerFactory();
+                    _scheduler = await schedulerFactory.GetScheduler();
+                }
 
                 IDictionary<string, object> jobDataDictionary = new Dictionary<string, object>
                 {

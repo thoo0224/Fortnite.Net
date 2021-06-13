@@ -5,6 +5,7 @@ using Fortnite.Net.Objects.Auth;
 using RestSharp;
 
 using System;
+using Quartz;
 
 namespace Fortnite.Net
 {
@@ -20,6 +21,7 @@ namespace Fortnite.Net
         private string _userAgent;
         private ClientToken _clientToken;
         private Platform _platform = Platform.WIN;
+        private IScheduler _scheduler;
 
         /// <summary>
         /// Sets the default user agent of the http client.
@@ -99,9 +101,25 @@ namespace Fortnite.Net
             return this;
         }
 
+        /// <summary>
+        /// If this is enabled, it will schedule access token refreshes every ~8 hours
+        /// </summary>
+        /// <param name="autoRefresh">If it should be enabled</param>
+        /// <returns></returns>
         public FortniteApiClientBuilder WithAutoRefresh(bool autoRefresh)
         {
             _authConfig.AutoRefresh = autoRefresh;
+            return this;
+        }
+
+        /// <summary>
+        /// Scheduler for the access token refreshes
+        /// </summary>
+        /// <param name="scheduler">Scheduler</param>
+        /// <returns></returns>
+        public FortniteApiClientBuilder WithScheduler(IScheduler scheduler)
+        {
+            _scheduler = scheduler;
             return this;
         }
 
@@ -116,7 +134,8 @@ namespace Fortnite.Net
                 _restClientAction,
                 _userAgent,
                 _clientToken ?? ClientToken.FortniteIosGameClient,
-                _platform);
+                _platform,
+                _scheduler);
         }
 
     }

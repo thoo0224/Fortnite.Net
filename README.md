@@ -9,7 +9,7 @@ With the FortniteApiClientBuilder you can create an instance of the FortniteApi.
 ```cs
 FortniteApiClient client = new FortniteApiClientBuilder()
   .WithDefaultClientToken(ClientToken.FortniteIosGameClient) // Default
-  .WithUserAgent("Not Fortnite/++Fortnite+Release-17.0-CL-0000000 IOS/11.3.1")
+  .WithUserAgent("Not Fortnite/++Fortnite+Release-xx.x-CL-xxxxxx IOS/xx.x.x :)")
   .WithPlatform(Platform.WIN) // Default, used for XMPP
   .WithDevice("Account ID", "Device ID", "Secret")
   .WithAutoRefresh(true) // This will start a scheduler to refresh the access token every x hours. This is disabled by default.

@@ -5,11 +5,16 @@ using Fortnite.Net.Objects.Auth;
 using Fortnite.Net.Services;
 using Fortnite.Net.Xmpp;
 
+using Quartz;
+using Quartz.Impl;
+
 using RestSharp;
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Fortnite.Net.Jobs;
 
 namespace Fortnite.Net
 {
@@ -41,6 +46,7 @@ namespace Fortnite.Net
         public bool IsLoggedIn { get; set; }
 
         private readonly Lazy<XmppClient> _xmppClient;
+
         public XmppClient XmppClient
         {
             get
@@ -73,6 +79,8 @@ namespace Fortnite.Net
         private readonly Action<RestClient> _restClientAction;
         private readonly string _userAgent;
 
+        private IScheduler _scheduler;
+
         internal FortniteApiClient(
             AuthConfig authConfig,
             Action<RestClient> restClientActions,
@@ -90,6 +98,36 @@ namespace Fortnite.Net
             AccountPublicService = new AccountPublicService(this);
         }
 
+        public async Task StartRefreshScheduler()
+        {
+            if (AuthConfig.AutoRefresh)
+            {
+                var schedulerFactory = new StdSchedulerFactory();
+                _scheduler = await schedulerFactory.GetScheduler();
+
+                IDictionary<string, object> jobDataDictionary = new Dictionary<string, object>
+                {
+                    {"client", this}
+                };
+                var jobData = new JobDataMap(jobDataDictionary);
+                var job = JobBuilder.Create<RefreshAccountJob>()
+                    .WithIdentity("RefreshAccountJob")
+                    .SetJobData(jobData)
+                    .WithDescription("Job to refresh the current session.");
+
+                var trigger = TriggerBuilder.Create()
+                    .WithDescription("Trigger to refresh the current session.")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x
+                        .WithInterval(TimeSpan.FromMilliseconds(ulong.Parse(CurrentLogin.RefreshExpires)))
+                        .RepeatForever())
+                    .Build();
+
+                await _scheduler.ScheduleJob(trigger);
+                await _scheduler.Start();
+            }
+        }
+
         /// <summary>
         /// Logs in with an authorization code, will authenticate with device auth.
         /// </summary>
@@ -105,7 +143,8 @@ namespace Fortnite.Net
             var codeUsed = code ?? AuthConfig.AuthorizationCode;
             if (codeUsed == null)
             {
-                throw new ArgumentException("Tried to login with an authorization code, but there was no code specified in the call or the client builder.");
+                throw new ArgumentException(
+                    "Tried to login with an authorization code, but there was no code specified in the call or the client builder.");
             }
 
             var authorizationAuth = await AccountPublicService
@@ -113,7 +152,8 @@ namespace Fortnite.Net
                 .ConfigureAwait(false);
             if (!authorizationAuth.IsSuccessful)
             {
-                throw new FortniteException("Failed to authenticate with the authorization code", authorizationAuth.Error);
+                throw new FortniteException("Failed to authenticate with the authorization code",
+                    authorizationAuth.Error);
             }
 
             var exchangeCode = await AccountPublicService
@@ -155,7 +195,8 @@ namespace Fortnite.Net
         {
             if (exchangeCode == null)
             {
-                throw new ArgumentException("Tried to login with exchange code, but there was no exchange specified in the call.");
+                throw new ArgumentException(
+                    "Tried to login with exchange code, but there was no exchange specified in the call.");
             }
 
             return await LoginWithExchangeAsync(exchangeCode.Code, clientToken, cancellationToken, fireLogin);
@@ -169,9 +210,10 @@ namespace Fortnite.Net
             bool fireLogin = false)
         {
             var exchangeCodeUsed = exchangeCode ?? AuthConfig.ExchangeCode;
-            if(exchangeCodeUsed == null)
+            if (exchangeCodeUsed == null)
             {
-                throw new ArgumentException("Tried to login with exchange code, but there was no exchange specified in the call or the client builder.");
+                throw new ArgumentException(
+                    "Tried to login with exchange code, but there was no exchange specified in the call or the client builder.");
             }
 
             var response = await AccountPublicService
@@ -206,10 +248,12 @@ namespace Fortnite.Net
             var deviceUsed = device ?? AuthConfig.Device;
             if (deviceUsed == null)
             {
-                throw new ArgumentException("Tried to login with device, but there was no device specified in the call or the client builder.");
+                throw new ArgumentException(
+                    "Tried to login with device, but there was no device specified in the call or the client builder.");
             }
 
-            await LoginWithDeviceAsync(deviceUsed.AccountId, deviceUsed.DeviceId, deviceUsed.Secret, clientToken, cancellationToken)
+            await LoginWithDeviceAsync(deviceUsed.AccountId, deviceUsed.DeviceId, deviceUsed.Secret, clientToken,
+                    cancellationToken)
                 .ConfigureAwait(false);
 
             return device;
@@ -275,8 +319,9 @@ namespace Fortnite.Net
         private bool _disposed;
 
         /// <summary>
-        /// Kills the current session, if there are too many active sessions
-        /// you may not be able to use epic's services for a few hours.
+        /// Kills the scheduler for refresh and the current session.
+        /// If there are too many sessions active on your account you might
+        /// not be able to use Epic Games' API for a while.
         /// </summary>
         /// <returns></returns>
         public async ValueTask DisposeAsync()
@@ -286,6 +331,7 @@ namespace Fortnite.Net
                 return;
             }
 
+            await _scheduler.Shutdown(false);
             await AccountPublicService.KillCurrentSessionAsync();
             _disposed = true;
         }

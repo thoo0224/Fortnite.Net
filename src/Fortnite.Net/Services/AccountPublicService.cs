@@ -63,6 +63,29 @@ namespace Fortnite.Net.Services
             return response;
         }
 
+
+        public async Task<FortniteResponse<AuthResponse>> RefreshAccessTokenAsync(
+            string refreshToken,
+            ClientToken clientToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            Preconditions.NotNullOrEmpty(refreshToken, nameof(refreshToken));
+
+
+            var response = await GetAccessTokenAsync(GrantType.RefreshToken, clientToken, cancellationToken,
+                ("refresh_token", refreshToken)).ConfigureAwait(false);
+            return response;
+        }
+
+        public async Task<FortniteResponse<AuthResponse>> RefreshAccessTokenAsync(
+            ClientToken clientToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await RefreshAccessTokenAsync(Client.CurrentLogin.RefreshToken, clientToken, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
+
         /// <summary>
         /// Authenticates with an authorization code.
         /// </summary>

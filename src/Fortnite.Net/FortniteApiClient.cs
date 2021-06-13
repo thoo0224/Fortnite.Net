@@ -1,6 +1,7 @@
 ﻿using Fortnite.Net.Config;
 using Fortnite.Net.Enums;
 using Fortnite.Net.Exceptions;
+using Fortnite.Net.Jobs;
 using Fortnite.Net.Objects.Auth;
 using Fortnite.Net.Services;
 using Fortnite.Net.Xmpp;
@@ -14,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Jobs;
 
 namespace Fortnite.Net
 {

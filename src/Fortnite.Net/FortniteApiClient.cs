@@ -118,11 +118,11 @@ namespace Fortnite.Net
                     .WithDescription("Job to refresh the current session.")
                     .Build();
 
+                var interval = CurrentLogin.ExpiresIn;
                 var trigger = TriggerBuilder.Create()
                     .WithDescription("Trigger to refresh the current session.")
-                    .StartNow()
                     .WithSimpleSchedule(x => x
-                        .WithInterval(TimeSpan.FromMilliseconds(ulong.Parse(CurrentLogin.RefreshExpires)))
+                        .WithInterval(TimeSpan.FromMilliseconds(interval))
                         .RepeatForever())
                     .Build();
 

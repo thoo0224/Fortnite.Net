@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using J = Newtonsoft.Json.JsonPropertyAttribute;
 
 namespace Fortnite.Net.Objects.Auth
@@ -15,7 +14,7 @@ namespace Fortnite.Net.Objects.Auth
         // Non existent if X-Epic-Device-Id header was not provided
         [J("device_id")] public string DeviceId { get; set; }
         [J("expires_at")] public DateTime ExpiresAt { get; set; }
-        [J("expires_in")] public int ExpiresIn { get; set; }
+        [J("expires_in")] public long ExpiresIn { get; set; }
         [J("in_app_id")] public string InAppId { get; set; }
         [J("internal_client")] public bool InternalClient { get; set; }
         [J("lastPasswordValidation")] public DateTime LastPasswordValidation { get; set; }

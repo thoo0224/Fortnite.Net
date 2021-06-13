@@ -112,6 +112,7 @@ namespace Fortnite.Net
 
             _xmppClient = new Lazy<XmppClient>(() => new XmppClient(this, platform), true);
             PartyService = new PartyService(this);
+            FortniteService = new FortniteService(this);
             AccountPublicService = new AccountPublicService(this);
         }
 

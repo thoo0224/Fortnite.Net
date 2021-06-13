@@ -22,7 +22,7 @@ namespace Fortnite.Net.Services
             request.AddQueryParameter("profileId", profileId);
             request.AddJsonBody(payload);
 
-            var response = await ExecuteAsync(request)
+            var response = await ExecuteAsync(request, true)
                 .ConfigureAwait(false);
             return response;
         }

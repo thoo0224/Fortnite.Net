@@ -146,6 +146,7 @@ namespace Fortnite.Net
                 var interval = CurrentLogin.ExpiresIn;
                 var trigger = TriggerBuilder.Create()
                     .WithDescription("Trigger to refresh the current session.")
+                    .WithPriority(999)
                     .WithSimpleSchedule(x => x
                         .WithInterval(TimeSpan.FromSeconds(interval))
                         .RepeatForever())
@@ -335,23 +336,21 @@ namespace Fortnite.Net
 
         internal async Task OnLoginAsync(AuthResponse authResponse)
         {
+            CurrentLogin = authResponse;
+            IsLoggedIn = true;
             if (Login != null)
             {
                 await Login.Invoke(authResponse);
             }
-
-            CurrentLogin = authResponse;
-            IsLoggedIn = true;
         }
 
         internal async Task OnRefreshAsync(AuthResponse authResponse)
         {
+            CurrentLogin = authResponse;
             if (Refresh != null)
             {
                 await Refresh.Invoke(authResponse);
             }
-
-            CurrentLogin = authResponse;
         }
 
         private bool _disposed;

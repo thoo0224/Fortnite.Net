@@ -7,7 +7,7 @@ This library is not finished and can contain bugs/issues, if you found any bugs 
 ### Example
 With the FortniteApiClientBuilder you can create an instance of the FortniteApi.
 ```cs
-// Using the using directive so if the client is not used anymore it will kill the current
+// Using the using directive so if the client is not used anymore it will kill the current session
 // and shutdown the refresh access token scheduler.
 using var client = new FortniteApiClientBuilder()
   .WithDefaultClientToken(ClientToken.FortniteIosGameClient) // Default

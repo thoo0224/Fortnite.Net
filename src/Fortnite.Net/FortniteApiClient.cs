@@ -35,6 +35,8 @@ namespace Fortnite.Net
         /// </summary>
         public event Func<AuthResponse, Task> Login;
 
+        public event Func<AuthResponse, Task> Refresh; 
+
         /// <summary>
         /// The current authentication session
         /// </summary>
@@ -310,11 +312,21 @@ namespace Fortnite.Net
         {
             if (Login != null)
             {
-                await Login?.Invoke(authResponse);
+                await Login.Invoke(authResponse);
             }
 
             CurrentLogin = authResponse;
             IsLoggedIn = true;
+        }
+
+        internal async Task OnRefreshAsync(AuthResponse authResponse)
+        {
+            if (Refresh != null)
+            {
+                await Refresh.Invoke(authResponse);
+            }
+
+            CurrentLogin = authResponse;
         }
 
         private bool _disposed;

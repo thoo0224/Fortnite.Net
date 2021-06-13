@@ -19,7 +19,7 @@ namespace Fortnite.Net.Jobs
             var response = await client.AccountPublicService.RefreshAccessTokenAsync();
             if (response.IsSuccessful)
             {
-                client.CurrentLogin = response.Data;
+                await client.OnRefreshAsync(response.Data);
             }
             else
             {

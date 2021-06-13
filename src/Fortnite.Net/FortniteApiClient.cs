@@ -100,6 +100,10 @@ namespace Fortnite.Net
             AccountPublicService = new AccountPublicService(this);
         }
 
+        /// <summary>
+        /// This starts the scheduler to refresh the access token.
+        /// </summary>
+        /// <returns></returns>
         public async Task StartRefreshScheduler()
         {
             if (AuthConfig.AutoRefresh)

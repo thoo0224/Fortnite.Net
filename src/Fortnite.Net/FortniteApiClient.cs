@@ -113,7 +113,8 @@ namespace Fortnite.Net
                 var job = JobBuilder.Create<RefreshAccountJob>()
                     .WithIdentity("RefreshAccountJob")
                     .SetJobData(jobData)
-                    .WithDescription("Job to refresh the current session.");
+                    .WithDescription("Job to refresh the current session.")
+                    .Build();
 
                 var trigger = TriggerBuilder.Create()
                     .WithDescription("Trigger to refresh the current session.")
@@ -123,7 +124,7 @@ namespace Fortnite.Net
                         .RepeatForever())
                     .Build();
 
-                await _scheduler.ScheduleJob(trigger);
+                await _scheduler.ScheduleJob(trigger, job);
                 await _scheduler.Start();
             }
         }

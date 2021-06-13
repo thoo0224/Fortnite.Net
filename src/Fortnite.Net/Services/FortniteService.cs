@@ -1,4 +1,6 @@
-﻿using RestSharp;
+﻿using Fortnite.Net.Objects;
+
+using RestSharp;
 
 using System.Threading.Tasks;
 
@@ -14,13 +16,15 @@ namespace Fortnite.Net.Services
         }
 
         // This will be better soon. (there's going to be a better system for this anyway)
-        public async Task ExecuteClientCommandAsync(string command, string profileId, object payload)
+        public async Task<FortniteResponse> ExecuteClientCommandAsync(string command, string profileId, object payload)
         {
             var request = new RestRequest($"/fortnite/api/game/v2/profile/{Client.CurrentLogin.AccountId}/client/{command}", Method.POST);
             request.AddQueryParameter("profileId", profileId);
             request.AddJsonBody(payload);
 
-            await ExecuteAsync(request);
+            var response = await ExecuteAsync(request)
+                .ConfigureAwait(false);
+            return response;
         }
 
     }

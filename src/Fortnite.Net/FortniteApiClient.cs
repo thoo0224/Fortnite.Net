@@ -124,7 +124,7 @@ namespace Fortnite.Net
                         .RepeatForever())
                     .Build();
 
-                await _scheduler.ScheduleJob(trigger, job);
+                await _scheduler.ScheduleJob(job, trigger);
                 await _scheduler.Start();
             }
         }

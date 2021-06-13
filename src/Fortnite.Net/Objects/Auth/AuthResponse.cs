@@ -9,9 +9,9 @@ namespace Fortnite.Net.Objects.Auth
 
         [J("access_token")] public string AccessToken { get; set; }
         public string App { get; set; }
-        public string RefreshExpires { get; set; }
-        public DateTime RefreshExpiresAt { get; set; }
-        public string RefreshToken { get; set; }
+        [J("refresh_expires")] public string RefreshExpires { get; set; }
+        [J("refresh_expires_at")] public DateTime RefreshExpiresAt { get; set; }
+        [J("refresh_token")] public string RefreshToken { get; set; }
 
     }
 }

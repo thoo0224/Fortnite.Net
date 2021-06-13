@@ -395,7 +395,7 @@ namespace Fortnite.Net.Services
         {
             Preconditions.NotNullOrEmpty(accessToken, nameof(accessToken));
 
-            var request = new RestRequest($"/account/api/oauth/sessions/kill/{accessToken}");
+            var request = new RestRequest($"/account/api/oauth/sessions/kill/{accessToken}", Method.DELETE);
             var response = await ExecuteAsync(request, true, cancellationToken)
                 .ConfigureAwait(false);
 

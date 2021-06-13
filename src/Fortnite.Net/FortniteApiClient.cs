@@ -147,7 +147,7 @@ namespace Fortnite.Net
                 var trigger = TriggerBuilder.Create()
                     .WithDescription("Trigger to refresh the current session.")
                     .WithSimpleSchedule(x => x
-                        .WithInterval(TimeSpan.FromMilliseconds(interval))
+                        .WithInterval(TimeSpan.FromSeconds(interval))
                         .RepeatForever())
                     .Build();
 
@@ -364,14 +364,21 @@ namespace Fortnite.Net
         /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
-            if (_disposed)
+            try
             {
-                return;
-            }
+                if (_disposed)
+                {
+                    return;
+                }
 
-            await _scheduler.Shutdown(false);
-            await AccountPublicService.KillCurrentSessionAsync();
-            _disposed = true;
+                await AccountPublicService.KillCurrentSessionAsync();
+                await _scheduler.Shutdown(false);
+                _disposed = true;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
     }

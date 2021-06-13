@@ -73,6 +73,21 @@ namespace Fortnite.Net
             set => _partyService = value;
         }
 
+        private FortniteService _fortniteService;
+
+        /// <summary>
+        /// Contains most/all of the party endpoints
+        /// </summary>
+        public FortniteService FortniteService
+        {
+            get
+            {
+                VerifyLogin();
+                return _fortniteService;
+            }
+            set => _fortniteService = value;
+        }
+
         /// <summary>
         /// Contains most/all of the account endpoints.
         /// </summary>

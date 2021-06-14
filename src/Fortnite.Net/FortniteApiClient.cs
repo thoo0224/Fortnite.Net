@@ -122,7 +122,7 @@ namespace Fortnite.Net
         /// This starts the scheduler to refresh the access token.
         /// </summary>
         /// <returns></returns>
-        public async Task StartRefreshScheduler()
+        public async Task<DateTimeOffset> StartRefreshScheduler()
         {
             if (AuthConfig.AutoRefresh)
             {
@@ -153,7 +153,11 @@ namespace Fortnite.Net
 
                 await _scheduler.ScheduleJob(job, trigger);
                 await _scheduler.Start();
+
+                return trigger.GetNextFireTimeUtc().GetValueOrDefault();
             }
+
+            return default;
         }
 
         /// <summary>

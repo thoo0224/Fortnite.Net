@@ -374,7 +374,6 @@ namespace Fortnite.Net
                 }
 
                 await AccountPublicService.KillCurrentSessionAsync();
-                await _scheduler.Shutdown(false);
                 _disposed = true;
             }
             catch

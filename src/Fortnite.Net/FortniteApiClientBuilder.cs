@@ -57,7 +57,7 @@ namespace Fortnite.Net
         }
 
         /// <summary>
-        /// Sets the client token for the fortnite client. (The default client token is <see cref="ClientToken.FortniteIosGameClient"/>
+        /// Sets the client token for the fortnite client. (The default client token is <see cref="ClientToken.FortniteNewSwitchGameClient"/>
         /// </summary>
         /// <param name="clientToken">WebsocketClient token which you can get from <seealso cref="ClientToken"/> or your own. A client token is 'ClientId:Secret' encoded in base64.</param>
         /// <returns>Client builder</returns>
@@ -133,7 +133,7 @@ namespace Fortnite.Net
                 _authConfig,
                 _restClientAction,
                 _userAgent,
-                _clientToken ?? ClientToken.FortniteIosGameClient,
+                _clientToken ?? ClientToken.FortniteNewSwitchGameClient,
                 _platform,
                 _scheduler);
         }

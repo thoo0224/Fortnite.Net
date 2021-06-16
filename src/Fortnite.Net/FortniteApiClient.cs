@@ -35,6 +35,9 @@ namespace Fortnite.Net
         /// </summary>
         public event Func<AuthResponse, Task> Login;
 
+        /// <summary>
+        /// Fired on refresh.
+        /// </summary>
         public event Func<AuthResponse, Task> Refresh; 
 
         /// <summary>

@@ -22,6 +22,7 @@ namespace Fortnite.Net
         public static ClientToken KairosIos => CreateToken("61d2f70175e84a6bba80a5089e597e1c", "FbiZv3wbiKpvVKrAeMxiR6WhxZWVbrvA");
         public static ClientToken ProdFn => CreateToken("xyza7891343Fr4ZSPkQZ3kaL3I2sX8B5", "F8BVRyHIqmct8cN9KSPbXsJszpiIZEYEFDiySxc1wuA");
         public static ClientToken LauncherAppClient2 => CreateToken("34a02cf8f4414e29b15921876da36f9a", "daafbccc737745039dffe53d94fc76cf");
+        public static ClientToken DauntlessDiesel => CreateToken("b070f20729f84693b5d621c904fc5bc2", "HG@XE&TGCxEJsgT#&_p2]=aRo#~>=>+c6PhR)zXP");
 
         /// <summary>
         /// The id of the client.

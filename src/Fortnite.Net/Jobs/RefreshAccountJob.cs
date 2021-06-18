@@ -16,10 +16,12 @@ namespace Fortnite.Net.Jobs
 
             }
 
-            var response = await client.AccountPublicService.RefreshAccessTokenAsync();
+            var response = await client.AccountPublicService.RefreshAccessTokenAsync()
+                .ConfigureAwait(false);
             if (response.IsSuccessful)
             {
-                await client.OnRefreshAsync(response.Data);
+                await client.OnRefreshAsync(response.Data)
+                    .ConfigureAwait(false);
             }
             else
             {

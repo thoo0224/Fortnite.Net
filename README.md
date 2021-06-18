@@ -29,7 +29,7 @@ await client.StartRefreshScheduler(); If you want to use auto refresh, this need
   - [ ] Parties
   - [ ] Commands
 - Services
-  - [ ] AccountPublicService (75%)
+  - [x] AccountPublicService
   - [ ] PartyService (69%)
   - [ ] FortniteService
   - [ ] EventsService
@@ -54,6 +54,8 @@ await client.StartRefreshScheduler(); If you want to use auto refresh, this need
     - [x] Base
     - [ ] Cosmetics
 - MCP (Low priority)
+  - [x] Raw
+  - [ ] Command Builder
 
 ### Packages
 - Newtonsoft.Json ([License](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md))

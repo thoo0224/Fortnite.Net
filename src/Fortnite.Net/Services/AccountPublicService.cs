@@ -483,16 +483,5 @@ namespace Fortnite.Net.Services
             return response;
         }
 
-        /*
-         * TODO:
-         *
-         * EditAccount
-         * GetAccountMetaData
-         * GetExternalAuth
-         * CreateExternalAuth
-         * RemoveExternalAuth
-         * FindAccountById
-         */
-
     }
 }

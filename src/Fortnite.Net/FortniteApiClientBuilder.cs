@@ -2,10 +2,11 @@
 using Fortnite.Net.Enums;
 using Fortnite.Net.Objects.Auth;
 
+using Quartz;
+
 using RestSharp;
 
 using System;
-using Quartz;
 
 namespace Fortnite.Net
 {
@@ -102,13 +103,13 @@ namespace Fortnite.Net
         }
 
         /// <summary>
-        /// If this is enabled, it will schedule access token refreshes every ~8 hours
+        /// The way the client should handel refreshes.
         /// </summary>
-        /// <param name="autoRefresh">If it should be enabled</param>
+        /// <param name="refreshType">The refresh type</param>
         /// <returns></returns>
-        public FortniteApiClientBuilder WithAutoRefresh(bool autoRefresh)
+        public FortniteApiClientBuilder WithRefresh(RefreshType refreshType)
         {
-            _authConfig.AutoRefresh = autoRefresh;
+            _authConfig.RefreshType = refreshType;
             return this;
         }
 

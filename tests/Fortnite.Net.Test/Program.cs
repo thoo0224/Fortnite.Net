@@ -5,8 +5,6 @@ using Serilog.Core;
 using Serilog.Events;
 
 using System;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fortnite.Net.Test
@@ -23,8 +21,9 @@ namespace Fortnite.Net.Test
             var secret = Environment.GetEnvironmentVariable("secret");
 
             var client = new FortniteApiClientBuilder()
-                .WithPlatform(Platform.WIN)
                 .WithDefaultClientToken(ClientToken.FortniteIosGameClient)
+                .WithRefresh(RefreshType.OnCall)
+                .WithPlatform(Platform.WIN)
                 .Create();
             await client.LoginWithDeviceAsync(accountId, deviceId, secret, ClientToken.FortniteIosGameClient);
 

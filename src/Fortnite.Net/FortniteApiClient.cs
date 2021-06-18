@@ -127,7 +127,7 @@ namespace Fortnite.Net
         /// <returns></returns>
         public async Task<DateTimeOffset> StartRefreshScheduler()
         {
-            if (AuthConfig.AutoRefresh)
+            if (AuthConfig.RefreshType == RefreshType.Scheduler)
             {
                 if (_scheduler == null)
                 {
@@ -338,6 +338,38 @@ namespace Fortnite.Net
             {
                 throw new FortniteException("You must be logged in to use this service.");
             }
+        }
+
+        internal async Task<bool> VerifyTokenAsync()
+        {
+            if (AuthConfig.RefreshType != RefreshType.OnCall)
+            {
+                return true;
+            }
+
+            if (CurrentLogin == null)
+            {
+                return false;
+            }
+
+            if (CurrentLogin.ExpiresAt > DateTime.UtcNow)
+            {
+                if (CurrentLogin.RefreshExpiresAt < DateTime.UtcNow)
+                {
+                    throw new FortniteException("Couldn't refresh token because the refresh token was expired.");
+                }
+
+                var response = await AccountPublicService.RefreshAccessTokenAsync()
+                    .ConfigureAwait(false);
+                if (response.IsSuccessful)
+                {
+                    CurrentLogin = response.Data;
+                }
+
+                return response.IsSuccessful;
+            }
+
+            return true;
         }
 
         internal async Task OnLoginAsync(AuthResponse authResponse)

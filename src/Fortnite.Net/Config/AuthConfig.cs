@@ -1,4 +1,5 @@
-﻿using Fortnite.Net.Objects.Auth;
+﻿using Fortnite.Net.Enums;
+using Fortnite.Net.Objects.Auth;
 
 namespace Fortnite.Net.Config
 {
@@ -21,9 +22,9 @@ namespace Fortnite.Net.Config
         public Device Device { get; set; }
 
         /// <summary>
-        /// If the client should auto refresh.
+        /// The refresh type
         /// </summary>
-        public bool AutoRefresh { get; set; }
+        public RefreshType RefreshType { get; set; } = RefreshType.OnCall;
 
     }
 }

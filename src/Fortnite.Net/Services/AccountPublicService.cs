@@ -1,4 +1,5 @@
 ﻿using Fortnite.Net.Enums;
+using Fortnite.Net.Exceptions;
 using Fortnite.Net.Objects;
 using Fortnite.Net.Objects.Account;
 using Fortnite.Net.Objects.Auth;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Exceptions;
 
 namespace Fortnite.Net.Services
 {
@@ -42,15 +42,22 @@ namespace Fortnite.Net.Services
             return response;
         }
 
-        /// <inheritdoc cref="GetAccessTokenAsync(Fortnite.Net.Enums.GrantType,Fortnite.Net.ClientToken,System.Tuple"/>
+        /// <summary>
+        /// Authenticates with <paramref name="grantType"/>
+        /// </summary>
+        /// <param name="grantType"><see cref="GrantType"/></param>
+        /// <param name="token">Client token, if null it will use the one provided in the client builder.</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <param name="fields">The fields for the request</param>
+        /// <returns>The Fortnite response</returns>
         public async Task<FortniteResponse<AuthResponse>> GetAccessTokenAsync(
             GrantType grantType,
-            ClientToken clientToken = null,
+            ClientToken token = null,
             CancellationToken cancellationToken = default,
             params (string Key, string value)[] fields)
         {
             var request = new RestRequest("/account/api/oauth/token", Method.POST);
-            request.AddHeader("Authorization", $"basic {clientToken?.Base64 ?? Client.DefaultClientToken.Base64}");
+            request.AddHeader("Authorization", $"basic {token?.Base64 ?? Client.DefaultClientToken.Base64}");
             request.AddParameter("grant_type", grantType.GetStringValue());
 
             foreach (var (k, v) in fields)
@@ -58,7 +65,7 @@ namespace Fortnite.Net.Services
                 request.AddParameter(k, v);
             }
 
-            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken)
+            var response = await ExecuteAsync<AuthResponse>(request, token: cancellationToken, requiresLogin: false)
                 .ConfigureAwait(false);
             return response;
         }
@@ -88,7 +95,7 @@ namespace Fortnite.Net.Services
             ClientToken clientToken = null,
             CancellationToken cancellationToken = default)
         {
-            var response = await RefreshAccessTokenAsync(Client.CurrentLogin.RefreshToken, clientToken, cancellationToken: cancellationToken)
+            var response = await RefreshAccessTokenAsync(Client.CurrentLogin.RefreshToken, clientToken, cancellationToken)
                 .ConfigureAwait(false);
             return response;
         }
@@ -98,7 +105,7 @@ namespace Fortnite.Net.Services
         /// </summary>
         /// <param name="code">Authorization code</param>
         /// <param name="clientToken">The client token, this needs to be the same client for the code.</param>
-        /// <param name="cancellationToken">Cancellation clientToken</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Authentication response</returns>
         public async Task<FortniteResponse<AuthResponse>> AuthWithAuthorizationCodeAsync(
             string code = null,
@@ -116,7 +123,7 @@ namespace Fortnite.Net.Services
         /// Gets an exchange code
         /// </summary>
         /// <param name="authResponse">Authentication response</param>
-        /// <param name="cancellationToken">Cancellation clientToken</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Exchange code response</returns>
         public async Task<FortniteResponse<ExchangeCode>> GetExchangeAsync(
             AuthResponse authResponse,
@@ -142,7 +149,7 @@ namespace Fortnite.Net.Services
         /// Authenticates with an exchange code
         /// </summary>
         /// <param name="exchangeCode">Exchange code</param>
-        /// <param name="clientToken">WebsocketClient clientToken</param>
+        /// <param name="clientToken">WebsocketClient token</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Authentication response</returns>
         public async Task<FortniteResponse<AuthResponse>> AuthWithExchangeAsync(

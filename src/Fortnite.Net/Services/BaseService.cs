@@ -1,11 +1,12 @@
-﻿using Fortnite.Net.Objects;
+﻿using Fortnite.Net.Exceptions;
+using Fortnite.Net.Objects;
+
 using Newtonsoft.Json;
 
 using RestSharp;
 
 using System.Threading;
 using System.Threading.Tasks;
-using Fortnite.Net.Exceptions;
 
 namespace Fortnite.Net.Services
 {
@@ -23,7 +24,9 @@ namespace Fortnite.Net.Services
             RestClient = client.CreateRestClient(this);
         }
 
-        internal virtual async Task<FortniteResponse> ExecuteAsync(RestRequest request, bool withAuth = false,
+        internal virtual async Task<FortniteResponse> ExecuteAsync(
+            RestRequest request, 
+            bool withAuth = false,
             CancellationToken token = default)
             => await ExecuteAsync<object>(request, withAuth, token, false).ConfigureAwait(false);
 
@@ -32,8 +35,19 @@ namespace Fortnite.Net.Services
             bool withAuth = false,
             CancellationToken token = default,
             bool withData = true,
-            string accessToken = null)
+            string accessToken = null,
+            bool requiresLogin = true)
         {
+            if (requiresLogin)
+            {
+                var isLoggedIn = await Client.VerifyTokenAsync()
+                    .ConfigureAwait(false);
+                if (!isLoggedIn)
+                {
+                    throw new FortniteException("You need to be logged in to use this!");
+                }
+            }
+
             if(withAuth)
             {
                 request.AddHeader("Authorization", $"bearer {accessToken ?? Client.CurrentLogin.AccessToken}");

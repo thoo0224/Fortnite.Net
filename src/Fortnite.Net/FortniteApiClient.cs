@@ -124,15 +124,17 @@ namespace Fortnite.Net
         /// <summary>
         /// This starts the scheduler to refresh the access token.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The next trigger</returns>
         public async Task<DateTimeOffset> StartRefreshScheduler()
         {
+            VerifyLogin();
+
             if (AuthConfig.RefreshType == RefreshType.Scheduler)
             {
                 if (_scheduler == null)
                 {
                     var schedulerFactory = new StdSchedulerFactory();
-                    _scheduler = await schedulerFactory.GetScheduler();
+                    _scheduler = await schedulerFactory.GetScheduler().ConfigureAwait(false);
                 }
 
                 IDictionary<string, object> jobDataDictionary = new Dictionary<string, object>
@@ -149,13 +151,17 @@ namespace Fortnite.Net
                 var interval = CurrentLogin.ExpiresIn;
                 var trigger = TriggerBuilder.Create()
                     .WithDescription("Trigger to refresh the current session.")
+                    .StartAt(DateTimeOffset.Now.AddSeconds(interval))
                     .WithSimpleSchedule(x => x
                         .WithInterval(TimeSpan.FromSeconds(interval))
                         .RepeatForever())
                     .Build();
 
-                await _scheduler.ScheduleJob(job, trigger);
-                await _scheduler.Start();
+                await _scheduler.ScheduleJob(job, trigger).ConfigureAwait(false);
+                if (!_scheduler.IsStarted)
+                {
+                    await _scheduler.Start().ConfigureAwait(false);
+                }
 
                 return trigger.GetNextFireTimeUtc().GetValueOrDefault();
             }
@@ -336,7 +342,7 @@ namespace Fortnite.Net
         {
             if (!IsLoggedIn)
             {
-                throw new FortniteException("You must be logged in to use this service.");
+                throw new FortniteException("You must be logged in to use this.");
             }
         }
 

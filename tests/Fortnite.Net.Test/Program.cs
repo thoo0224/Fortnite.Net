@@ -22,11 +22,18 @@ namespace Fortnite.Net.Test
 
             var client = new FortniteApiClientBuilder()
                 .WithDefaultClientToken(ClientToken.FortniteIosGameClient)
-                .WithRefresh(RefreshType.OnCall)
+                .WithRefresh(RefreshType.Scheduler)
                 .WithPlatform(Platform.WIN)
                 .Create();
+            client.Refresh += response =>
+            {
+                Log.Information("Refresh");
+                return Task.CompletedTask;
+            };
             await client.LoginWithDeviceAsync(accountId, deviceId, secret, ClientToken.FortniteIosGameClient);
+            var next = await client.StartRefreshScheduler();
 
+            await Task.Delay(-1);
             await client.AccountPublicService.KillCurrentSessionAsync();
         }
 

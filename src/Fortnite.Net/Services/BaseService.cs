@@ -31,11 +31,12 @@ namespace Fortnite.Net.Services
             RestRequest request,
             bool withAuth = false,
             CancellationToken token = default,
-            bool withData = true)
+            bool withData = true,
+            string accessToken = null)
         {
             if(withAuth)
             {
-                request.AddHeader("Authorization", $"bearer {Client.CurrentLogin.AccessToken}");
+                request.AddHeader("Authorization", $"bearer {accessToken ?? Client.CurrentLogin.AccessToken}");
             }
 
             var response = await RestClient.ExecuteAsync(request, token)
